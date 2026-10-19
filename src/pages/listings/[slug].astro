@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
+import MediaGallery from "../../components/MediaGallery.astro";
 import { countryName, residencyLabel } from "../../lib/format";
 
 export async function getStaticPaths() {
@@ -62,6 +63,17 @@ const jsonLd = {
           <p class="mt-5 inline-block rotate-[-1deg] rounded-full border-2 border-ink bg-amber px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">
             Sponsored listing
           </p>
+        )}
+
+        {d.sponsored && ((d.gallery?.length ?? 0) > 0 || d.videoUrl) && (
+          <div class="mt-8">
+            <MediaGallery
+              productName={d.title}
+              images={d.gallery ?? []}
+              videoUrl={d.videoUrl}
+              videoTitle={d.videoTitle}
+            />
+          </div>
         )}
 
         <dl class="mt-8 grid grid-cols-1 gap-5 rounded-[20px] border-2 border-ink bg-cream p-7 shadow-hard sm:grid-cols-2">

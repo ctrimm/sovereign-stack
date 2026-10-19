@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Two essays + artwork for all Insights
+- **Decision:** Added the two queued essays: "Europe's AI sovereignty playbook" (chips→clouds→models→apps, incl. Aleph Alpha/Cohere cautionary tale) and "Your phone is the weakest layer" (mobile sovereignty stack: /e/OS, CalyxOS, Sailfish, 4 hardware theories). Generated 9 sticker-book-style hero images (one per essay, 16:9, no text) via media pipeline; reviewed firsthand before shipping. Wired into Insights: `image` frontmatter field, hero figure on essay pages, thumbnails on index cards, og:image + twitter:image (summary_large_image) via new Base `image` prop.
+- **Evidence:** Cory: "let's add those two essays. also, we need images for each, so, make those and include them."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Data essay + living /stats dashboard
 - **Decision:** New Insights essay "The state of the sovereign stack: what 359 listings taught us" (Article JSON-LD) built on real computed corpus stats: US 68 vs DE 67 dead heat, 55% EU-domiciled, AWS most-replaced (39), AI tools 2nd-largest category (58), 38% open source / 34% self-hostable, US listings 53% open source (highest share), freemium dominant (141). New **/stats** page: build-time-computed dashboard (domicile bars, open-source share by domicile, category grid, pricing mix, most-replaced incumbents) with Dataset JSON-LD; linked from essay, footer, llms.txt. Caught and corrected stale jurisdiction count (36 → 41). 623 pages.
 - **Evidence:** Cory picked "Write the data piece + stats page" from the options widget.

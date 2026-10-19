@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import ListingCard from "../components/ListingCard.astro";
+import MediaGallery from "../components/MediaGallery.astro";
 import { slotInventory } from "../data/slots";
 
 const listings = await getCollection("listings");
@@ -37,6 +38,7 @@ const tiers = [
     features: [
       "Sponsored card in listing grids",
       "Sponsored entry in category comparisons",
+      "Photo gallery (up to 3 images) on your listing page",
       "Rotates across every page",
     ],
     featured: false,
@@ -48,6 +50,7 @@ const tiers = [
     blurb: "Top visibility: homepage spotlight, category banners, sponsor strip.",
     features: [
       "Everything in Silver",
+      "Photo gallery (up to 6 images) on your listing page",
       "Sponsored spotlight on the homepage",
       "Banner slot on category pages",
       "Logo in the homepage sponsor strip",
@@ -61,6 +64,7 @@ const tiers = [
     blurb: "Maximum presence, shown twice as often as Gold.",
     features: [
       "Everything in Gold",
+      "Video embed as the hero of your listing page",
       "Shown twice as often as Gold",
       "Sponsored migration guide included",
       "Priority support",
@@ -187,6 +191,54 @@ const money = (n: number) =>
             ))}
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="mediakit-heading" class="pt-16">
+      <span class="inline-block rotate-[2deg] rounded-full border-2 border-ink bg-lime px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">
+        Sponsor exclusive
+      </span>
+      <h2 id="mediakit-heading" class="mt-4 text-3xl font-black tracking-tight">The sponsored media kit</h2>
+      <p class="mt-2 max-w-2xl text-ink-soft">
+        Free listings get the facts — domicile, license, residency. Sponsors get
+        the <strong class="text-ink">showroom</strong>: a photo gallery with a
+        thumbnail rail right on your listing page, so buyers see your product
+        instead of just reading about it. Platinum adds a video embed as the
+        hero. Nobody else in this space sells this — placement gets you seen,
+        the media kit gets you <em>chosen</em>.
+      </p>
+      <div class="mt-8">
+        <MediaGallery
+          productName="Example product"
+          images={[
+            "/sponsors/example/demo-dashboard.jpg",
+            "/sponsors/example/demo-inbox.jpg",
+            "/sponsors/example/demo-console.jpg",
+          ]}
+          demoLabel="Example"
+        />
+      </div>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <div class="sticker p-5">
+          <h3 class="font-extrabold">Silver — $298/mo</h3>
+          <p class="mt-2 text-sm text-ink-soft">Gallery of <strong class="text-ink">up to 3 images</strong> on your listing page.</p>
+        </div>
+        <div class="sticker p-5">
+          <h3 class="font-extrabold">Gold — $598/mo</h3>
+          <p class="mt-2 text-sm text-ink-soft">Gallery of <strong class="text-ink">up to 6 images</strong> on your listing page.</p>
+        </div>
+        <div class="sticker -rotate-1 p-5">
+          <h3 class="font-extrabold">Platinum — $1,198/mo</h3>
+          <p class="mt-2 text-sm text-ink-soft">Gallery of <strong class="text-ink">up to 8 images</strong>, plus a <strong class="text-ink">video embed as your listing's hero</strong>.</p>
+        </div>
+      </div>
+      <div class="mt-6 rounded-[20px] border-2 border-dashed border-ink-faint bg-paper p-6 text-sm text-ink-soft">
+        <p class="font-extrabold text-ink">Specs & ground rules</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5">
+          <li>Images: 1600×1000 JPG or PNG, supplied by you, hosted by us — they load fast and never break.</li>
+          <li>Video: YouTube or Vimeo links only, click-to-play so your page stays light.</li>
+          <li>All sponsor media is labeled <strong class="text-ink">Sponsored</strong>. Rankings stay editorial — the media kit buys the showroom, never the position.</li>
+        </ul>
       </div>
     </section>
 

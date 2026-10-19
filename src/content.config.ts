@@ -41,6 +41,11 @@ const listings = defineCollection({
     // sticker, a disclosure, and rel="sponsored" on outbound links.
     // Rankings are editorial; sponsorship buys visibility only.
     sponsored: z.boolean().default(false),
+    // Sponsored media kit: gallery images + optional video hero (Platinum).
+    // Paths are site-absolute, e.g. "/sponsors/acme/dashboard.jpg".
+    gallery: z.array(z.string()).optional(),
+    videoUrl: z.string().url().optional(),
+    videoTitle: z.string().optional(),
     // Editorial maturity signal.
     maturity: z.enum(["Beta", "Production", "Established"]).default("Production"),
   }),
