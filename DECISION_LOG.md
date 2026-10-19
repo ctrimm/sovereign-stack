@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Batch D: researched AI sovereign listings
+- **Decision:** +71 listings (286 total; 519 pages: 163 alternatives, 36 jurisdictions). Researched via Firecrawl (awesome-european-ai list, Reuters, Wikipedia): EU AI labs (Poolside, Black Forest Labs, Domyn, H, Kyutai, Almawave, Tilde, NXAI, Noxtua, Legora, Photoroom), EU AI clouds (Nscale, Nebius, Northern Data, Berget AI, Regolo, Verda, VSHN), EU AI chips (SiPearl, Axelera AI, Innatera, SEMRON, SpiNNcloud, Fractile, VSORA, Kalray, GreenWaves), open-source AI tooling (Qdrant DE, Weaviate NL BSD-3 verified, Jina AI, Mixedbread, deepset, Rasa, Langfuse, Giskard, LangWatch, ZenML, Flower, Meilisearch, Argilla, Docling), plus KR chips (FuriosaAI, Rebellions), IL (Hailo, D-ID), CN models (DeepSeek, Qwen), IN (Khoj). **Correction:** Aleph Alpha listing updated — signed definitive merger agreement with Cohere Sept 2026 (Reuters), combined co. operates as Cohere, dual HQ Toronto/Berlin; added Cohere listing (CA).
+- **Evidence:** Cory: "keep going and use firecrawl if need be or your internal browser to find more AI sovereign offerings."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Batch C + Insights editorial section
 - **Decision:** +92 listings (215 total, 20 categories incl. new AI tools: Ollama, Mistral AI, Aleph Alpha...). New **Insights** section: 6 long-form thought pieces on fullstack sovereign tech (the sovereign stack thesis, jurisdiction buyer's guide, 10-person starter kit, why we list US vendors, self-host vs managed framework, true cost of free) with Article JSON-LD, index page, nav link, and llms.txt section. Programmatic engine now yields 110 alternatives + 33 jurisdiction pages; 392 pages total.
 - **Evidence:** Cory: "add some more and then some broader thought pieces on fullstack sovereign tech."

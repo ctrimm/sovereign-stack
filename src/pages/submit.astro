@@ -1,0 +1,276 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Ticker from "../components/Ticker.astro";
+
+const categories = (await getCollection("categories")).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+
+const countries: [string, string][] = [
+  ["AT", "Austria"], ["AU", "Australia"], ["BE", "Belgium"], ["BG", "Bulgaria"],
+  ["BR", "Brazil"], ["CA", "Canada"], ["CH", "Switzerland"], ["CN", "China"],
+  ["CY", "Cyprus"], ["CZ", "Czechia"], ["DE", "Germany"], ["DK", "Denmark"],
+  ["EE", "Estonia"], ["ES", "Spain"], ["FI", "Finland"], ["FR", "France"],
+  ["GB", "United Kingdom"], ["GI", "Gibraltar"], ["GR", "Greece"], ["HR", "Croatia"],
+  ["HU", "Hungary"], ["IE", "Ireland"], ["IL", "Israel"], ["IN", "India"],
+  ["IS", "Iceland"], ["IT", "Italy"], ["JP", "Japan"], ["KR", "South Korea"],
+  ["LT", "Lithuania"], ["LU", "Luxembourg"], ["LV", "Latvia"], ["MY", "Malaysia"],
+  ["NL", "Netherlands"], ["NO", "Norway"], ["NZ", "New Zealand"], ["PL", "Poland"],
+  ["PT", "Portugal"], ["RO", "Romania"], ["SA", "Saudi Arabia"], ["SE", "Sweden"],
+  ["SG", "Singapore"], ["SI", "Slovenia"], ["SK", "Slovakia"], ["TR", "Türkiye"],
+  ["TW", "Taiwan"], ["UA", "Ukraine"], ["US", "United States"], ["AE", "United Arab Emirates"],
+  ["ZA", "South Africa"],
+];
+---
+
+<Base
+  title="Submit a listing | Sovereign Stack"
+  description="Suggest a sovereign tech product for the directory. Submissions are editorially reviewed; inclusion is free and never for sale."
+>
+  <Ticker />
+  <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <p class="badge">Community submissions</p>
+    <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Submit a listing</h1>
+    <p class="mt-4 text-lg text-ink-soft">
+      Know a sovereign product we're missing? Send it in. Every submission is
+      reviewed by an editor before publication — <strong class="text-ink">inclusion is
+      free and never for sale.</strong> Paid visibility is always labeled as
+      sponsored; this form is for editorial listings only.
+    </p>
+
+    <form id="submit-form" class="mt-10 space-y-8" novalidate>
+      <fieldset class="sticker p-6">
+        <legend class="px-2 text-lg font-black">The product</legend>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Product name *</span>
+            <input required name="productName" type="text" class="field" placeholder="Example Cloud" />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Website *</span>
+            <input required name="website" type="url" class="field" placeholder="https://example.com" />
+          </label>
+        </div>
+        <label class="mt-5 block">
+          <span class="mb-1 block text-sm font-bold">Tagline *</span>
+          <input required name="tagline" type="text" class="field" placeholder="One-line description, e.g. Sovereign cloud from France." />
+        </label>
+        <div class="mt-5">
+          <span class="mb-2 block text-sm font-bold">Categories</span>
+          <div class="flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-ink bg-paper px-3 py-1.5 text-sm font-semibold has-[:checked]:bg-lime">
+                <input type="checkbox" name="categories" value={c.id} class="accent-ink" />
+                {c.data.shortLabel ?? c.data.title}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Replaces <span class="font-normal text-ink-faint">(comma-separated)</span></span>
+            <input name="replaces" type="text" class="field" placeholder="Gmail, Outlook" />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">License</span>
+            <input name="license" type="text" class="field" placeholder="e.g. Apache-2.0, AGPL-3.0, Proprietary" />
+          </label>
+        </div>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Pricing</span>
+            <select name="pricing" class="field">
+              <option>Free</option>
+              <option selected>Freemium</option>
+              <option>Paid</option>
+              <option>Usage-based</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Maturity</span>
+            <select name="maturity" class="field">
+              <option>Beta</option>
+              <option selected>Production</option>
+              <option>Established</option>
+            </select>
+          </label>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-5">
+          <label class="inline-flex cursor-pointer items-center gap-2 text-sm font-bold">
+            <input type="checkbox" name="openSource" class="h-5 w-5 accent-ink" /> Open source
+          </label>
+          <label class="inline-flex cursor-pointer items-center gap-2 text-sm font-bold">
+            <input type="checkbox" name="selfHost" class="h-5 w-5 accent-ink" /> Self-hostable
+          </label>
+          <label class="inline-flex cursor-pointer items-center gap-2 text-sm font-bold">
+            <input type="checkbox" name="managed" checked class="h-5 w-5 accent-ink" /> Managed offering
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sticker p-6">
+        <legend class="px-2 text-lg font-black">Jurisdiction</legend>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Company name *</span>
+            <input required name="companyName" type="text" class="field" placeholder="Example SAS" />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Country of domicile *</span>
+            <select required name="domicile" class="field">
+              <option value="">Select…</option>
+              {countries.map(([code, name]) => (
+                <option value={code}>{name}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Founded <span class="font-normal text-ink-faint">(year)</span></span>
+            <input name="founded" type="number" min="1900" max="2026" class="field" placeholder="2019" />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Data residency <span class="font-normal text-ink-faint">(ISO codes, comma-separated)</span></span>
+            <input name="dataResidency" type="text" class="field" placeholder="DE, FR" />
+          </label>
+        </div>
+        <label class="mt-5 block">
+          <span class="mb-1 block text-sm font-bold">Legal / GDPR posture</span>
+          <input name="gdpr" type="text" class="field" placeholder="e.g. German domicile; GDPR-native hosting." />
+        </label>
+      </fieldset>
+
+      <fieldset class="sticker p-6">
+        <legend class="px-2 text-lg font-black">About you</legend>
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Your email <span class="font-normal text-ink-faint">(optional — only so we can ask follow-ups)</span></span>
+          <input name="submitterEmail" type="email" class="field" placeholder="you@example.com" />
+        </label>
+        <label class="mt-5 block">
+          <span class="mb-1 block text-sm font-bold">Notes for the editors</span>
+          <textarea name="notes" rows="3" class="field" placeholder="Anything we should know — your relationship to the product, sources for the jurisdiction claim, etc."></textarea>
+        </label>
+      </fieldset>
+
+      <p id="form-error" class="hidden rounded-2xl border-2 border-ink bg-amber p-4 text-sm font-bold" role="alert"></p>
+
+      <div class="flex flex-wrap gap-4">
+        <button type="submit" class="rounded-full border-2 border-ink bg-lime px-8 py-3 text-base font-black shadow-hard transition-transform hover:-translate-y-0.5">
+          Open pre-filled GitHub issue →
+        </button>
+        <button type="button" id="copy-btn" class="rounded-full border-2 border-ink bg-cream px-8 py-3 text-base font-black shadow-hard transition-transform hover:-translate-y-0.5">
+          Copy as markdown
+        </button>
+      </div>
+      <p class="text-sm text-ink-soft">
+        Submitting opens a pre-filled issue on our public GitHub repo — no account
+        needed to draft it, though you'll sign in to post. Prefer email? Use
+        "Copy as markdown" and send it wherever suits you. We review every
+        submission; typical turnaround is a few days.
+      </p>
+    </form>
+  </div>
+</Base>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById("submit-form");
+    const errBox = document.getElementById("form-error");
+    const copyBtn = document.getElementById("copy-btn");
+
+    function val(name) {
+      const el = form.elements[name];
+      return el ? el.value.trim() : "";
+    }
+    function checkedVals(name) {
+      return Array.from(form.querySelectorAll('input[name="' + name + '"]:checked')).map((i) => i.value);
+    }
+    function isChecked(name) {
+      const el = form.elements[name];
+      return el ? el.checked : false;
+    }
+
+    function showError(msg) {
+      errBox.textContent = msg;
+      errBox.classList.remove("hidden");
+      errBox.scrollIntoView({ block: "center" });
+    }
+
+    function buildMarkdown() {
+      const cats = checkedVals("categories");
+      const lines = [
+        "## New listing submission",
+        "",
+        `**Product:** ${val("productName")}`,
+        `**Website:** ${val("website")}`,
+        `**Tagline:** ${val("tagline")}`,
+        `**Categories:** ${cats.join(", ") || "—"}`,
+        `**Replaces:** ${val("replaces") || "—"}`,
+        `**License:** ${val("license") || "—"}`,
+        `**Open source:** ${isChecked("openSource") ? "yes" : "no"}`,
+        `**Pricing:** ${val("pricing")}`,
+        `**Maturity:** ${val("maturity")}`,
+        `**Self-hostable:** ${isChecked("selfHost") ? "yes" : "no"}`,
+        `**Managed:** ${isChecked("managed") ? "yes" : "no"}`,
+        "",
+        `**Company:** ${val("companyName")}`,
+        `**Domicile:** ${val("domicile")}`,
+        `**Founded:** ${val("founded") || "—"}`,
+        `**Data residency:** ${val("dataResidency") || "—"}`,
+        `**Legal/GDPR:** ${val("gdpr") || "—"}`,
+        "",
+        `**Submitter email:** ${val("submitterEmail") || "—"}`,
+        `**Notes:** ${val("notes") || "—"}`,
+      ];
+      return lines.join("\n");
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      errBox.classList.add("hidden");
+      if (!val("productName") || !val("website") || !val("tagline") || !val("companyName") || !val("domicile")) {
+        showError("Please fill in the required fields: product name, website, tagline, company name, and domicile.");
+        return;
+      }
+      const title = "New listing: " + val("productName");
+      const body = buildMarkdown();
+      const url =
+        "https://github.com/ctrimm/sovereign-stack/issues/new" +
+        "?title=" + encodeURIComponent(title) +
+        "&body=" + encodeURIComponent(body) +
+        "&labels=" + encodeURIComponent("new-listing");
+      window.open(url, "_blank", "noopener");
+    });
+
+    copyBtn.addEventListener("click", async function () {
+      try {
+        await navigator.clipboard.writeText(buildMarkdown());
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => { copyBtn.textContent = "Copy as markdown"; }, 2000);
+      } catch (err) {
+        showError("Copy failed — your browser blocked clipboard access. The pre-filled issue option still works.");
+      }
+    });
+  })();
+</script>
+
+<style>
+  .field {
+    width: 100%;
+    border: 2px solid var(--color-ink);
+    border-radius: 12px;
+    background: var(--color-paper);
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .field:focus {
+    outline: 3px solid var(--color-lime);
+    outline-offset: 1px;
+  }
+  fieldset.sticker legend {
+    background: var(--color-cream);
+  }
+</style>
