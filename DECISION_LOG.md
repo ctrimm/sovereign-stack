@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Doubled ad rates + commitment discounts
+- **Decision:** Monthly rates doubled vs the OpenAlternative-anchored draft: Silver $298 / Gold $598 / Platinum $1,198. Commitment ladder: 5% off quarterly, 15% off semi-annual, 35% off annual (annual effective $194/$389/$779 — near standard directory rates; monthly is the flexibility premium).
+- **Evidence:** Cory's call ("double them"). Unit economics (see MEMORY.md): ~11 sponsors ≈ OpenAlternative's $6.5K/mo at half the logo count; ~1.5 gross adds/month sustains 12 sponsors at 8% churn.
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Design direction: Sticker Book
 - **Decision:** Rebuilt the site in the "Sticker Book" direction Cory picked from three mocks (Control Room, Sticker Book, Aurora): cream paper, ink borders, hard offset shadows, sticker badges, "DITCH X → TRY Y" ticker.
 - **Evidence:** Cory: v1 "looks so freaking stale... make the design look better. More fun, perhaps."

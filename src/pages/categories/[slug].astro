@@ -61,6 +61,15 @@ const jsonLd = {
         <p class="mt-4 text-xs text-ink-soft">Paid placement. It never affects the comparison below. <a href="/advertise/" class="font-bold underline">Your product here →</a></p>
       </aside>
     )}
+    {sponsors.length === 0 && (
+      <aside aria-label="Sponsor this category" class="mt-8 rounded-[20px] border-2 border-dashed border-ink/40 p-5">
+        <p class="font-bold">
+          Your product here.
+          <a href="/advertise/" class="ml-1 underline decoration-wavy underline-offset-4">Sponsor this category →</a>
+        </p>
+        <p class="mt-1 text-sm text-ink-soft">Only one banner slot per category. When it's gone, it's gone.</p>
+      </aside>
+    )}
 
     <h2 class="mt-12 text-2xl font-black tracking-tight">Compare</h2>
     <div class="mt-4 overflow-x-auto rounded-[20px] border-2 border-ink bg-cream shadow-hard">

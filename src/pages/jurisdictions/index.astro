@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Ticker from "../../components/Ticker.astro";
+import { countryName } from "../../lib/format";
+
+const listings = await getCollection("listings");
+const map = new Map<string, number>();
+for (const l of listings) {
+  const code = l.data.company.domicile.toUpperCase();
+  map.set(code, (map.get(code) ?? 0) + 1);
+}
+const entries = [...map.entries()].sort((a, b) => b[1] - a[1] || countryName(a[0]).localeCompare(countryName(b[0])));
+---
+
+<Base
+  title="Browse by jurisdiction | Sovereign Stack"
+  description="Sovereignty is relative to the buyer. Browse sovereign products by company domicile: Germany, Switzerland, France, and more."
+>
+  <Ticker />
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="max-w-3xl">
+      <p class="badge">Sovereignty is relative</p>
+      <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Jurisdictions</h1>
+      <p class="mt-4 text-lg text-ink-soft">
+        Company domicile determines which government can compel a vendor to hand
+        over your data. Pick the jurisdiction that fits your threat model.
+      </p>
+    </header>
+    <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {entries.map(([code, count]) => (
+        <li>
+          <a
+            href={`/jurisdictions/${code.toLowerCase()}/`}
+            class="sticker flex items-center justify-between gap-3 p-5 transition-transform hover:-translate-y-1"
+          >
+            <span>
+              <span class="block font-extrabold">{countryName(code)}</span>
+              <span class="text-sm text-ink-soft">
+                {count} sovereign {count === 1 ? "product" : "products"}
+              </span>
+            </span>
+            <span aria-hidden="true" class="text-xl font-black">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>

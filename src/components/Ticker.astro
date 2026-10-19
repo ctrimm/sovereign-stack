@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+
+const listings = await getCollection("listings");
+const tickerItems = listings
+  .filter((l) => l.data.replaces.length > 0)
+  .slice(0, 6)
+  .map((l) => ({ from: l.data.replaces[0].toUpperCase(), to: l.data.title.toUpperCase() }));
+---
+
+{tickerItems.length > 0 && (
+  <div class="relative left-1/2 w-screen -translate-x-1/2 -rotate-1 overflow-hidden border-y-2 border-ink bg-ink py-3 text-cream" aria-hidden="true">
+    <div class="ticker-track text-[15px] font-bold tracking-wide">
+      {Array(2).fill(0).map(() => (
+        <span>
+          {tickerItems.map((t) => (
+            <span>DITCH <span class="text-lime">{t.from}</span> → TRY <span class="text-amber">{t.to}</span><span class="mx-4 text-ink-faint">★</span></span>
+          ))}
+        </span>
+      ))}
+    </div>
+  </div>
+)}

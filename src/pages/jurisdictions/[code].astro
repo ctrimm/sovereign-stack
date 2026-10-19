@@ -1,0 +1,142 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ListingCard from "../../components/ListingCard.astro";
+import Ticker from "../../components/Ticker.astro";
+import { countryName, slugify } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const listings = await getCollection("listings");
+  const map = new Map<string, typeof listings>();
+  for (const l of listings) {
+    const code = l.data.company.domicile.toUpperCase();
+    if (!map.has(code)) map.set(code, []);
+    map.get(code)!.push(l);
+  }
+  return [...map.entries()].map(([code, items]) => ({
+    params: { code: code.toLowerCase() },
+    props: { code, items },
+  }));
+}
+
+const { code, items } = Astro.props;
+const country = countryName(code);
+const pageTitle = `Sovereign tech from ${country}`;
+const pageDesc = `${items.length} sovereign ${items.length === 1 ? "product" : "products"} domiciled in ${country}: compare open-source status, data residency, and pricing.`;
+const openSource = items.filter((l) => l.data.openSource);
+
+const faqs: Array<[string, string]> = [
+  [
+    `Why choose software domiciled in ${country}?`,
+    `Company domicile determines which government's laws can compel a vendor to hand over data. Choosing vendors domiciled in ${country} keeps that relationship under ${country}'s courts and regulators instead of a foreign jurisdiction's.`,
+  ],
+  [
+    `How many open-source options come from ${country}?`,
+    openSource.length > 0
+      ? `${openSource.length} of the ${items.length} ${country}-domiciled products catalogued here are open source: ${openSource.map((l) => l.data.title).join(", ")}.`
+      : `None of the ${items.length} ${country}-domiciled products catalogued here are open source yet. This page updates as new options are added.`,
+  ],
+];
+
+const itemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: pageTitle,
+  description: pageDesc,
+  numberOfItems: items.length,
+  itemListElement: items.map((l, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: `https://sovereignstack.co/listings/${l.id}/`,
+    name: l.data.title,
+  })),
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(([q, a]) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+---
+
+<Base title={`${pageTitle} | Sovereign Stack`} description={pageDesc}>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  <Ticker />
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm">
+      <ol class="flex flex-wrap items-center gap-2 text-ink-soft">
+        <li><a href="/" class="underline decoration-wavy underline-offset-4 hover:text-ink">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/jurisdictions/" class="underline decoration-wavy underline-offset-4 hover:text-ink">Jurisdictions</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="font-bold text-ink">{country}</li>
+      </ol>
+    </nav>
+
+    <header class="max-w-3xl">
+      <p class="badge">Jurisdiction: {country}</p>
+      <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+        Sovereign tech from <span class="underline decoration-amber decoration-4 underline-offset-8">{country}</span>
+      </h1>
+      <p class="mt-4 text-lg text-ink-soft">
+        {items.length} {items.length === 1 ? "product" : "products"} domiciled in {country}
+        {openSource.length > 0 && `, ${openSource.length} of them open source`}.
+        Sovereignty is relative to the buyer — here is what choosing {country} gets you.
+      </p>
+    </header>
+
+    <section aria-label={`${country} products comparison`} class="mt-10 overflow-x-auto rounded-[20px] border-2 border-ink bg-cream shadow-hard">
+      <table class="w-full min-w-[760px] text-left text-sm">
+        <caption class="sr-only">{pageTitle} comparison</caption>
+        <thead>
+          <tr class="border-b-2 border-ink text-xs uppercase tracking-wider text-ink-faint">
+            <th scope="col" class="px-5 py-4 font-extrabold">Product</th>
+            <th scope="col" class="px-5 py-4 font-extrabold">Categories</th>
+            <th scope="col" class="px-5 py-4 font-extrabold">Data residency</th>
+            <th scope="col" class="px-5 py-4 font-extrabold">License</th>
+            <th scope="col" class="px-5 py-4 font-extrabold">Open source</th>
+            <th scope="col" class="px-5 py-4 font-extrabold">Replaces</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y-2 divide-paper">
+          {items.map((l) => (
+            <tr class={l.data.sponsored ? "bg-amber/15" : undefined}>
+              <th scope="row" class="px-5 py-4 font-extrabold">
+                <a href={`/listings/${l.id}/`} class="underline decoration-wavy decoration-2 underline-offset-4 hover:text-ink-soft">
+                  {l.data.title}
+                </a>
+                {l.data.sponsored && <span class="badge ml-2 bg-amber text-[10px]">Sponsored</span>}
+              </th>
+              <td class="px-5 py-4">{l.data.categories.join(", ")}</td>
+              <td class="px-5 py-4">{l.data.dataResidency.map(countryName).join(", ") || "Self-hosted"}</td>
+              <td class="px-5 py-4">{l.data.license}</td>
+              <td class="px-5 py-4">{l.data.openSource ? "Yes" : "No"}</td>
+              <td class="px-5 py-4">{l.data.replaces.join(", ")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-label="All products" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((l) => <ListingCard listing={l} />)}
+    </section>
+
+    <section aria-labelledby="faq-heading" class="mt-14 max-w-3xl">
+      <h2 id="faq-heading" class="text-2xl font-black tracking-tight">Frequently asked questions</h2>
+      <div class="mt-4 space-y-3">
+        {faqs.map(([q, a]) => (
+          <details class="rounded-[16px] border-2 border-ink bg-cream px-5 py-4 shadow-hard">
+            <summary class="cursor-pointer font-extrabold">{q}</summary>
+            <p class="mt-2 text-ink-soft">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

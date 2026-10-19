@@ -87,7 +87,7 @@ const jsonLd = {
           </div>
           <div>
             <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Deployment</dt>
-            <dd class="mt-1 font-medium">{[d.selfHost ? "Self-hostable" : null, d.managed ? "Managed hosting" : null].filter(Boolean).join(" · ")}</dd>
+            <dd class="mt-1 font-medium">{[d.selfHost ? "Self-hostable" : null, d.managed ? "Managed hosting" : null].filter(Boolean).join(" · ") || "Physical product"}</dd>
           </div>
           <div class="sm:col-span-2">
             <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Legal posture</dt>

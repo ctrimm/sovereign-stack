@@ -5,18 +5,13 @@ import ListingCard from "../components/ListingCard.astro";
 import SearchBox from "../components/SearchBox.astro";
 import EmailCapture from "../components/EmailCapture.astro";
 import SponsorStrip from "../components/SponsorStrip.astro";
+import Ticker from "../components/Ticker.astro";
 import { categoryDot } from "../lib/categories";
 
 const categories = await getCollection("categories");
 const listings = await getCollection("listings");
 const featured = listings.filter((l) => l.data.featured && !l.data.sponsored);
 const sponsors = listings.filter((l) => l.data.sponsored);
-
-// Ticker pairs: "DITCH X → TRY Y", from real listing data.
-const tickerItems = listings
-  .filter((l) => l.data.replaces.length > 0)
-  .slice(0, 6)
-  .map((l) => ({ from: l.data.replaces[0].toUpperCase(), to: l.data.title.toUpperCase() }));
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -61,19 +56,7 @@ const jsonLd = {
     </section>
   </div>
 
-  {tickerItems.length > 0 && (
-    <div class="relative left-1/2 w-screen -translate-x-1/2 -rotate-1 overflow-hidden border-y-2 border-ink bg-ink py-3 text-cream" aria-hidden="true">
-      <div class="ticker-track text-[15px] font-bold tracking-wide">
-        {Array(2).fill(0).map(() => (
-          <span>
-            {tickerItems.map((t) => (
-              <span>DITCH <span class="text-lime">{t.from}</span> → TRY <span class="text-amber">{t.to}</span><span class="mx-4 text-ink-faint">★</span></span>
-            ))}
-          </span>
-        ))}
-      </div>
-    </div>
-  )}
+  <Ticker />
 
   <div class="mx-auto max-w-5xl px-4">
     <section aria-labelledby="categories-heading" class="pt-14">
@@ -102,6 +85,7 @@ const jsonLd = {
         <div class="flex flex-wrap items-center gap-3">
           <h2 id="sponsored-heading" class="text-3xl font-black tracking-tight">Sponsored spotlight</h2>
           <span class="rotate-2 rounded-full border-2 border-ink bg-amber px-3 py-1 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">Paid placement</span>
+          <span class="rounded-full border-2 border-ink bg-cream px-3 py-1 text-xs font-extrabold">{3 - sponsors.length} of 3 slots left</span>
         </div>
         <p class="mt-2 text-sm text-ink-soft">Sponsors keep the directory free. Rankings are editorial — never for sale.</p>
         <div class="mt-6 grid gap-5 sm:grid-cols-2">

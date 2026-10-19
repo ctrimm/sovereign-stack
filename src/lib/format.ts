@@ -22,3 +22,17 @@ const COUNTRIES: Record<string, string> = {
 export function countryName(code: string): string {
   return COUNTRIES[code.toUpperCase()] ?? code.toUpperCase();
 }
+
+export function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** EU member states (ISO alpha-2), for jurisdiction FAQs. */
+export const EU_COUNTRIES = new Set([
+  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
+  "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK",
+  "SI", "ES", "SE",
+]);
