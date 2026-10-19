@@ -46,4 +46,14 @@ const listings = defineCollection({
   }),
 });
 
-export const collections = { categories, listings };
+const insights = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/insights" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { categories, listings, insights };

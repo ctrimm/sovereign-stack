@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Big content batch: 123 listings, 19 categories
+- **Decision:** Added 85 listings via reproducible generator scripts (scripts/gen-batch-a.py, gen-batch-b.py) + 10 new categories (password managers, photo management, social, maps, developer tools, identity/auth, business apps, design, monitoring, publishing). Hardware grew 6 → 13. Fixed Element miscategorized under office-productivity → communication. Added residencyLabel() helper so tables render "Physical product" / "App" / "Global" instead of wrong "Self-hosted" fallbacks.
+- **Evidence:** Cory: "add a shit ton more sovereign tech, include hardware." 244 pages build clean.
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Programmatic SEO/AEO engine + slot scarcity
 - **Decision:** Replicate OpenAlternative's playbook (verified: every SaaS product gets an "alternatives to X" page generated from listing data; long tail of generated pages; 1,700-line llms.txt; year-stamped comparison blog; freshness via GitHub API). Built: /alternatives/[product] (26 pages, e.g. "Sovereign alternatives to Gmail") and /jurisdictions/[country] (12 pages, our differentiator) with comparison tables, cards, FAQPage + ItemList JSON-LD on every page; llms.txt now lists alternatives + jurisdictions; 28 new listings (38 total, 9 categories incl. hardware/search/chat). Scarcity: slot caps in src/data/slots.ts (3 homepage spotlight, 1 banner/category, 8 strip) with live "X of Y left" inventory on /advertise and "your product here" placeholders on empty category pages.
 - **Evidence:** Piotr Kulpiński's programmatic-SEO guide (dirstarter.com); OA llms.txt/robots.txt read directly. Pages are data-driven (unique domicile/license/residency data per page) to stay clear of scaled-content-abuse policy.

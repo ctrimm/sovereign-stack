@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Ticker from "../../components/Ticker.astro";
+
+const insights = (await getCollection("insights")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<Base
+  title="Insights: thought pieces on sovereign tech | Sovereign Stack"
+  description="Essays on fullstack digital sovereignty: jurisdiction, self-hosting, the economics of free software, and practical starter kits."
+>
+  <Ticker />
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="max-w-3xl">
+      <p class="badge">Essays & guides</p>
+      <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Insights</h1>
+      <p class="mt-4 text-lg text-ink-soft">
+        Thought pieces on fullstack sovereign tech — the thesis behind the
+        directory, jurisdiction guides, and practical starter kits. New pieces
+        as the catalog grows.
+      </p>
+    </header>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      {insights.map((i) => (
+        <a
+          href={`/insights/${i.id}/`}
+          class="sticker block p-6 transition-transform hover:-translate-y-1"
+        >
+          <div class="flex flex-wrap gap-2">
+            {i.data.tags.map((t) => (
+              <span class="badge text-[10px]">{t}</span>
+            ))}
+          </div>
+          <h2 class="mt-3 text-xl font-black tracking-tight">{i.data.title}</h2>
+          <p class="mt-2 text-sm text-ink-soft">{i.data.description}</p>
+          <p class="mt-3 text-xs font-bold text-ink-faint">
+            {(() => {
+              const [y, m, d] = i.data.date.toISOString().split("T")[0].split("-").map(Number);
+              const s = new Date(y, m - 1, d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+              return <time datetime={i.data.date.toISOString().split("T")[0]}>{s}</time>;
+            })()}
+          </p>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>

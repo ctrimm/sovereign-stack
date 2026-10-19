@@ -1,0 +1,104 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Ticker from "../../components/Ticker.astro";
+
+export async function getStaticPaths() {
+  const insights = await getCollection("insights");
+  return insights.map((i) => ({
+    params: { slug: i.id },
+    props: { insight: i },
+  }));
+}
+
+const { insight } = Astro.props;
+const { Content } = await render(insight);
+// Parse the calendar date from ISO parts to avoid timezone-day shifts.
+const [dy, dm, dd] = insight.data.date.toISOString().split("T")[0].split("-").map(Number);
+const dateStr = new Date(dy, dm - 1, dd).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: insight.data.title,
+  description: insight.data.description,
+  datePublished: insight.data.date.toISOString().split("T")[0],
+  author: { "@type": "Organization", name: "Sovereign Stack" },
+  publisher: { "@type": "Organization", name: "Sovereign Stack" },
+};
+---
+
+<Base title={`${insight.data.title} | Sovereign Stack Insights`} description={insight.data.description}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+  <Ticker />
+  <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm">
+      <ol class="flex flex-wrap items-center gap-2 text-ink-soft">
+        <li><a href="/" class="underline decoration-wavy underline-offset-4 hover:text-ink">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/insights/" class="underline decoration-wavy underline-offset-4 hover:text-ink">Insights</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="font-bold text-ink">{insight.data.title}</li>
+      </ol>
+    </nav>
+    <header>
+      <div class="flex flex-wrap gap-2">
+        {insight.data.tags.map((t) => (
+          <span class="badge">{t}</span>
+        ))}
+      </div>
+      <h1 class="mt-4 text-4xl font-black tracking-tight sm:text-5xl">{insight.data.title}</h1>
+      <p class="mt-4 text-lg text-ink-soft">{insight.data.description}</p>
+      <p class="mt-3 text-sm font-bold text-ink-faint">
+        <time datetime={insight.data.date.toISOString().split("T")[0]}>{dateStr}</time>
+        {" · "}Sovereign Stack
+      </p>
+    </header>
+    <article class="prose-sticker mt-10">
+      <Content />
+    </article>
+    <footer class="mt-12 rounded-[20px] border-2 border-ink bg-cream p-6 shadow-hard">
+      <p class="font-extrabold">Put the thesis into practice.</p>
+      <p class="mt-1 text-sm text-ink-soft">
+        Browse the directory by category, by what each product replaces, or by jurisdiction.
+      </p>
+      <p class="mt-3 flex flex-wrap gap-3 text-sm font-bold">
+        <a href="/categories/" class="underline decoration-wavy underline-offset-4">Categories →</a>
+        <a href="/alternatives/" class="underline decoration-wavy underline-offset-4">Alternatives →</a>
+        <a href="/jurisdictions/" class="underline decoration-wavy underline-offset-4">Jurisdictions →</a>
+      </p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .prose-sticker :global(h2) {
+    margin-top: 2.25rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+  }
+  .prose-sticker :global(p) {
+    margin-top: 1rem;
+    line-height: 1.75;
+    color: var(--color-ink-soft);
+  }
+  .prose-sticker :global(p strong) {
+    color: var(--color-ink);
+  }
+  .prose-sticker :global(ol),
+  .prose-sticker :global(ul) {
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    line-height: 1.75;
+    color: var(--color-ink-soft);
+  }
+  .prose-sticker :global(ol) { list-style: decimal; }
+  .prose-sticker :global(ul) { list-style: disc; }
+  .prose-sticker :global(li) { margin-top: 0.5rem; }
+  .prose-sticker :global(li strong) { color: var(--color-ink); }
+</style>
