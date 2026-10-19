@@ -1,6 +1,6 @@
 ---
 title: "Aleph Alpha"
-tagline: "Sovereign AI from Germany."
+tagline: "German AI lab, merging with Cohere."
 website: "https://www.aleph-alpha.com"
 categories: ["ai-tools"]
 replaces: ["OpenAI"]
@@ -14,8 +14,8 @@ company:
 dataResidency: ["DE"]
 selfHost: false
 managed: true
-gdpr: "German domicile; EU data residency."
+gdpr: "German domicile; merging with Cohere (CA)."
 maturity: "Established"
 ---
 
-Aleph Alpha is a German AI company building sovereign LLMs for government and enterprise with EU data residency.
+Aleph Alpha is a German AI company that signed a definitive merger agreement with Canada's Cohere in September 2026 — the combined business operates as Cohere with dual headquarters in Toronto and Berlin.

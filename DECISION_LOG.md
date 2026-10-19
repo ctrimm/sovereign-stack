@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Batch C + Insights editorial section
+- **Decision:** +92 listings (215 total, 20 categories incl. new AI tools: Ollama, Mistral AI, Aleph Alpha...). New **Insights** section: 6 long-form thought pieces on fullstack sovereign tech (the sovereign stack thesis, jurisdiction buyer's guide, 10-person starter kit, why we list US vendors, self-host vs managed framework, true cost of free) with Article JSON-LD, index page, nav link, and llms.txt section. Programmatic engine now yields 110 alternatives + 33 jurisdiction pages; 392 pages total.
+- **Evidence:** Cory: "add some more and then some broader thought pieces on fullstack sovereign tech."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Big content batch: 123 listings, 19 categories
 - **Decision:** Added 85 listings via reproducible generator scripts (scripts/gen-batch-a.py, gen-batch-b.py) + 10 new categories (password managers, photo management, social, maps, developer tools, identity/auth, business apps, design, monitoring, publishing). Hardware grew 6 → 13. Fixed Element miscategorized under office-productivity → communication. Added residencyLabel() helper so tables render "Physical product" / "App" / "Global" instead of wrong "Self-hosted" fallbacks.
 - **Evidence:** Cory: "add a shit ton more sovereign tech, include hardware." 244 pages build clean.
