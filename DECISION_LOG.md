@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Filters + batch F
+- **Decision:** Built the missing filtering: new `FilterBar` component (domicile select, pricing select, open-source-only, self-hostable-only, reset, live result count, empty state) on all category pages and all alternatives pages; filters both comparison tables and card grids client-side, full content still statically rendered for SEO. Content: +32 listings (359 total, 21 categories incl. new **OS & firmware**): sovereign email depth (Fastmail AU, Hushmail CA, WEB.DE/freenet/mail.de DE, Laposte.net/Mailo FR, Soverin NL verified, Zoho IN, Seznam CZ, Ukr.net UA, 1984 IS, Cyon CH), EU AI Act tooling (LatticeFlow CH, Saidot FI, 2021.AI DK, Modulos CH, Holistic AI GB verified, Credo AI US), OS/firmware (/e/OS FR, CalyxOS US, Sailfish FI, Ubuntu GB, NixOS NL verified, Qubes OS PL, Dasharo PL, 9elements DE verified, Pop!_OS US, Zorin OS IE verified, elementary OS US, KDE DE, GNOME US). 621 pages.
+- **Evidence:** Cory asked whether specific filtering existed (it didn't — only homepage search) and commissioned the three content veins.
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Batch E: sovereign clouds + /submit flow
 - **Decision:** +41 listings (327 total; 578 pages). Batch E focused on commercial cloud providers with sovereignty posture: SecNumCloud-qualified 3DS Outscale (FR), Open Telekom Cloud + STACKIT (DE), Aruba Cloud (IT), Safespring (SE, verified 100% Swedish), Nubo (BE cooperative, verified), Aiven (FI), Hostinger + Cherry Servers (LT), CloudFerro/Oktawave (PL), Elastx/Cleura/Binero/Glesys (SE), Fuga/Leafcloud/Greenhost/TransIP (NL, Leafcloud verified), CloudSigma/Hostpoint/KeyCDN (CH), Naver Cloud (KR, verified), Sakura (JP), Sify (IN), Alibaba Cloud (CN), Core42 (AE/G42, verified). New **/submit** page: backend-free listing submission — form builds a pre-filled GitHub issue (labeled `new-listing`) + copy-as-markdown fallback; required-field validation; linked from nav, footer, and a homepage CTA band. Editorial review note: inclusion free, never for sale.
 - **Evidence:** Cory: "keep adding more - look at commercial cloud service providers... Also, please add a way for people to submit net-new items."

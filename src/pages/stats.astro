@@ -1,0 +1,189 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Ticker from "../components/Ticker.astro";
+import { countryName, EU_COUNTRIES, slugify } from "../lib/format";
+
+const listings = await getCollection("listings");
+const categories = await getCollection("categories");
+const catTitle = new Map(categories.map((c) => [c.id, c.data.title]));
+
+const total = listings.length;
+const domCount = new Map<string, number>();
+const osByDom = new Map<string, number>();
+const catCount = new Map<string, number>();
+const pricingCount = new Map<string, number>();
+const replacesCount = new Map<string, number>();
+let osTotal = 0;
+let shTotal = 0;
+
+for (const l of listings) {
+  const d = l.data;
+  domCount.set(d.company.domicile, (domCount.get(d.company.domicile) ?? 0) + 1);
+  if (d.openSource) {
+    osTotal++;
+    osByDom.set(d.company.domicile, (osByDom.get(d.company.domicile) ?? 0) + 1);
+  }
+  if (d.selfHost) shTotal++;
+  for (const c of d.categories) catCount.set(c, (catCount.get(c) ?? 0) + 1);
+  pricingCount.set(d.pricing, (pricingCount.get(d.pricing) ?? 0) + 1);
+  for (const r of d.replaces) replacesCount.set(r, (replacesCount.get(r) ?? 0) + 1);
+}
+
+const topDom = [...domCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
+const maxDom = topDom[0][1];
+const osShareTop = topDom.slice(0, 8).map(([code, n]) => ({
+  code,
+  pct: Math.round((100 * (osByDom.get(code) ?? 0)) / n),
+}));
+const topCats = [...catCount.entries()]
+  .map(([id, n]) => ({ title: catTitle.get(id) ?? id, id, n }))
+  .sort((a, b) => b.n - a.n);
+const maxCat = topCats[0].n;
+const euShare = Math.round(
+  (100 * [...domCount.entries()].filter(([c]) => EU_COUNTRIES.has(c)).reduce((s, [, n]) => s + n, 0)) / total
+);
+const pricingOrder = ["Free", "Freemium", "Paid", "Usage-based"];
+const topReplaces = [...replacesCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "Sovereign Stack directory statistics",
+  description: `Aggregate statistics on ${total} sovereign technology listings: domicile distribution, open-source share, categories, and pricing.`,
+  creator: { "@type": "Organization", name: "Sovereign Stack" },
+};
+---
+
+<Base
+  title="By the numbers | Sovereign Stack"
+  description={`The Sovereign Stack directory in numbers: ${total} listings across ${categories.length} categories and ${domCount.size} jurisdictions, computed from the live catalog.`}
+  jsonLd={jsonLd}
+>
+  <Ticker />
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <p class="badge">Living dataset</p>
+    <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">By the numbers</h1>
+    <p class="mt-4 max-w-3xl text-lg text-ink-soft">
+      Aggregate statistics computed from the live catalog at build time — they
+      update with every deploy. Read the story behind them in
+      <a href="/insights/state-of-the-stack/" class="font-bold underline decoration-wavy underline-offset-4"> our data report →</a>
+    </p>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {[
+        [String(total), "listings catalogued"],
+        [String(categories.length), "categories"],
+        [String(domCount.size), "jurisdictions"],
+        [`${euShare}%`, "EU-domiciled"],
+      ].map(([num, label]) => (
+        <div class="sticker p-6 text-center">
+          <p class="text-5xl font-black tracking-tight">{num}</p>
+          <p class="mt-2 text-sm font-bold text-ink-soft">{label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-2">
+      <section aria-labelledby="dom-heading" class="sticker p-6 sm:p-8">
+        <h2 id="dom-heading" class="text-2xl font-black tracking-tight">Listings by domicile</h2>
+        <p class="mt-1 text-sm text-ink-soft">Where the companies behind the products are legally registered.</p>
+        <ol class="mt-6 space-y-3">
+          {topDom.map(([code, n]) => (
+            <li>
+              <div class="flex items-baseline justify-between text-sm font-bold">
+                <a href={`/jurisdictions/${code.toLowerCase()}/`} class="hover:underline">{countryName(code)}</a>
+                <span class="text-ink-soft">{n}</span>
+              </div>
+              <div class="mt-1 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper" role="img" aria-label={`${countryName(code)}: ${n} listings`}>
+                <div class="h-full rounded-full bg-lime" style={`width: ${(100 * n) / maxDom}%`}></div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="os-heading" class="sticker p-6 sm:p-8">
+        <h2 id="os-heading" class="text-2xl font-black tracking-tight">Open-source share by domicile</h2>
+        <p class="mt-1 text-sm text-ink-soft">
+          {Math.round((100 * osTotal) / total)}% of all listings are open source; {Math.round((100 * shTotal) / total)}% are self-hostable.
+        </p>
+        <ol class="mt-6 space-y-3">
+          {osShareTop.map(({ code, pct }) => (
+            <li>
+              <div class="flex items-baseline justify-between text-sm font-bold">
+                <span>{countryName(code)}</span>
+                <span class="text-ink-soft">{pct}%</span>
+              </div>
+              <div class="mt-1 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper" role="img" aria-label={`${countryName(code)}: ${pct}% open source`}>
+                <div class="h-full rounded-full bg-violet" style={`width: ${pct}%`}></div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+
+    <section aria-labelledby="cat-heading" class="mt-14">
+      <h2 id="cat-heading" class="text-3xl font-black tracking-tight">Listings by category</h2>
+      <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {topCats.map(({ title, id, n }) => (
+          <a href={`/categories/${id}/`} class="sticker block p-5 transition-transform hover:-translate-y-1">
+            <div class="flex items-baseline justify-between gap-2">
+              <h3 class="font-black tracking-tight">{title}</h3>
+              <span class="text-sm font-bold text-ink-soft">{n}</span>
+            </div>
+            <div class="mt-3 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper" role="img" aria-label={`${title}: ${n} listings`}>
+              <div class="h-full rounded-full bg-coral" style={`width: ${(100 * n) / maxCat}%`}></div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-2">
+      <section aria-labelledby="pricing-heading" class="sticker p-6 sm:p-8">
+        <h2 id="pricing-heading" class="text-2xl font-black tracking-tight">Pricing mix</h2>
+        <ol class="mt-6 space-y-3">
+          {pricingOrder.map((p) => {
+            const n = pricingCount.get(p) ?? 0;
+            return (
+              <li>
+                <div class="flex items-baseline justify-between text-sm font-bold">
+                  <span>{p}</span>
+                  <span class="text-ink-soft">{n} ({Math.round((100 * n) / total)}%)</span>
+                </div>
+                <div class="mt-1 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper" role="img" aria-label={`${p}: ${n} listings`}>
+                  <div class="h-full rounded-full bg-amber" style={`width: ${(100 * n) / total}%`}></div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+
+      <section aria-labelledby="rep-heading" class="sticker p-6 sm:p-8">
+        <h2 id="rep-heading" class="text-2xl font-black tracking-tight">Most-replaced incumbents</h2>
+        <p class="mt-1 text-sm text-ink-soft">The products our listings most often replace.</p>
+        <ol class="mt-6 space-y-2">
+          {topReplaces.map(([name, n], i) => (
+            <li class="flex items-baseline justify-between gap-3 border-b-2 border-dashed border-ink/15 pb-2 text-sm">
+              <span class="font-bold">
+                <span class="mr-2 inline-block w-6 text-ink-faint">{i + 1}.</span>
+                <a href={`/alternatives/${slugify(name)}/`} class="hover:underline">{name}</a>
+              </span>
+              <span class="font-bold text-ink-soft">{n}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+
+    <p class="mt-12 text-center text-sm text-ink-soft">
+      Numbers computed from the catalog at build time. Spot something missing?
+      <a href="/submit/" class="font-bold underline decoration-wavy underline-offset-4"> Submit a listing →</a>
+    </p>
+  </div>
+</Base>
+
+
