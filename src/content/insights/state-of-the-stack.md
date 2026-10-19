@@ -2,6 +2,7 @@
 title: "The state of the sovereign stack: what 359 listings taught us"
 description: "A data-driven look at our own catalog: the US-Germany dead heat, why AWS is the incumbent everyone replaces, and where open source actually clusters."
 date: 2026-10-19
+image: /insights/state-of-the-stack.jpg
 tags: ["data", "report"]
 ---
 

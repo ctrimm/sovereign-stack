@@ -2,6 +2,7 @@
 title: "Sovereignty is relative: a buyer's guide to jurisdiction"
 description: "There is no such thing as a sovereign product — only a product sovereign relative to you. How to read domicile, residency, and law."
 date: 2026-10-19
+image: /insights/sovereignty-is-relative.jpg
 tags: ["jurisdiction", "guide"]
 ---
 

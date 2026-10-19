@@ -32,7 +32,7 @@ const articleJsonLd = {
 };
 ---
 
-<Base title={`${insight.data.title} | Sovereign Stack Insights`} description={insight.data.description}>
+<Base title={`${insight.data.title} | Sovereign Stack Insights`} description={insight.data.description} image={insight.data.image}>
   <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
   <Ticker />
   <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
@@ -58,6 +58,17 @@ const articleJsonLd = {
         {" · "}Sovereign Stack
       </p>
     </header>
+    {insight.data.image && (
+      <figure class="sticker mt-8 overflow-hidden p-2">
+        <img
+          src={insight.data.image}
+          alt={`Illustration for: ${insight.data.title}`}
+          class="w-full rounded-[14px] border-2 border-ink"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
+    )}
     <article class="prose-sticker mt-10">
       <Content />
     </article>

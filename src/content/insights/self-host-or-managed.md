@@ -2,6 +2,7 @@
 title: "Self-host or managed? A decision framework"
 description: "The most common question in sovereign tech, answered with a flowchart instead of ideology."
 date: 2026-10-19
+image: /insights/self-host-or-managed.jpg
 tags: ["guide", "self-hosting"]
 ---
 

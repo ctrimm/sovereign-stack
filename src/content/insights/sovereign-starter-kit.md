@@ -2,6 +2,7 @@
 title: "The 2026 sovereign starter kit: a complete stack for a 10-person team"
 description: "A concrete, fullstack setup — hardware to apps — for a small team that wants to own its infrastructure. All from the directory."
 date: 2026-10-19
+image: /insights/sovereign-starter-kit.jpg
 tags: ["guide", "fullstack", "starter-kit"]
 ---
 

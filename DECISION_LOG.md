@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Data essay + living /stats dashboard
+- **Decision:** New Insights essay "The state of the sovereign stack: what 359 listings taught us" (Article JSON-LD) built on real computed corpus stats: US 68 vs DE 67 dead heat, 55% EU-domiciled, AWS most-replaced (39), AI tools 2nd-largest category (58), 38% open source / 34% self-hostable, US listings 53% open source (highest share), freemium dominant (141). New **/stats** page: build-time-computed dashboard (domicile bars, open-source share by domicile, category grid, pricing mix, most-replaced incumbents) with Dataset JSON-LD; linked from essay, footer, llms.txt. Caught and corrected stale jurisdiction count (36 → 41). 623 pages.
+- **Evidence:** Cory picked "Write the data piece + stats page" from the options widget.
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Filters + batch F
 - **Decision:** Built the missing filtering: new `FilterBar` component (domicile select, pricing select, open-source-only, self-hostable-only, reset, live result count, empty state) on all category pages and all alternatives pages; filters both comparison tables and card grids client-side, full content still statically rendered for SEO. Content: +32 listings (359 total, 21 categories incl. new **OS & firmware**): sovereign email depth (Fastmail AU, Hushmail CA, WEB.DE/freenet/mail.de DE, Laposte.net/Mailo FR, Soverin NL verified, Zoho IN, Seznam CZ, Ukr.net UA, 1984 IS, Cyon CH), EU AI Act tooling (LatticeFlow CH, Saidot FI, 2021.AI DK, Modulos CH, Holistic AI GB verified, Credo AI US), OS/firmware (/e/OS FR, CalyxOS US, Sailfish FI, Ubuntu GB, NixOS NL verified, Qubes OS PL, Dasharo PL, 9elements DE verified, Pop!_OS US, Zorin OS IE verified, elementary OS US, KDE DE, GNOME US). 621 pages.
 - **Evidence:** Cory asked whether specific filtering existed (it didn't — only homepage search) and commissioned the three content veins.

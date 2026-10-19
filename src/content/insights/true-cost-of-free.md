@@ -2,6 +2,7 @@
 title: "The true cost of free software"
 description: "Free tiers, venture subsidies, and the acquisition lottery: what your stack really costs when the vendor is the product."
 date: 2026-10-19
+image: /insights/true-cost-of-free.jpg
 tags: ["economics", "thesis"]
 ---
 

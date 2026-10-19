@@ -2,6 +2,7 @@
 title: "Why a sovereignty directory lists US vendors"
 description: "Honesty about the relativity thesis: why Bitwarden, Framework, and Cloudflare-alternatives from the US belong here."
 date: 2026-10-19
+image: /insights/why-we-list-us-vendors.jpg
 tags: ["thesis", "editorial"]
 ---
 

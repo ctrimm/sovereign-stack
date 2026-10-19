@@ -5,12 +5,15 @@ interface Props {
   title: string;
   description: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Absolute-path social image, e.g. "/insights/europe-ai-playbook.jpg". */
+  image?: string;
 }
 
-const { title, description, jsonLd } = Astro.props;
+const { title, description, jsonLd, image } = Astro.props;
 const siteName = "Sovereign Stack";
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://sovereignstack.co").toString();
+const ogImage = image ? new URL(image, Astro.site ?? "https://sovereignstack.co").toString() : undefined;
 ---
 
 <!doctype html>
@@ -27,7 +30,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://sovereignst
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {ogImage && (
+      <>
+        <meta property="og:image" content={ogImage} />
+        <meta name="twitter:image" content={ogImage} />
+      </>
+    )}
     {jsonLd && (
       <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     )}

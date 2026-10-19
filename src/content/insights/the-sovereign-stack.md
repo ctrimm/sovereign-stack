@@ -2,6 +2,7 @@
 title: "The sovereign stack: own every layer"
 description: "Sovereignty leaks at the weakest layer. A fullstack tour from silicon to SaaS — and why partial independence is an illusion."
 date: 2026-10-19
+image: /insights/the-sovereign-stack.jpg
 tags: ["thesis", "fullstack"]
 ---
 

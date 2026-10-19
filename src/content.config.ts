@@ -53,6 +53,8 @@ const insights = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
+    // Path to the essay's hero artwork, e.g. "/insights/europe-ai-playbook.jpg".
+    image: z.string().optional(),
   }),
 });
 

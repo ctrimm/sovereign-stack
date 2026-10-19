@@ -27,8 +27,17 @@ const insights = (await getCollection("insights")).sort(
       {insights.map((i) => (
         <a
           href={`/insights/${i.id}/`}
-          class="sticker block p-6 transition-transform hover:-translate-y-1"
+          class="sticker block overflow-hidden transition-transform hover:-translate-y-1"
         >
+          {i.data.image && (
+            <img
+              src={i.data.image}
+              alt=""
+              class="aspect-[16/9] w-full border-b-2 border-ink object-cover"
+              loading="lazy"
+            />
+          )}
+          <div class="p-6">
           <div class="flex flex-wrap gap-2">
             {i.data.tags.map((t) => (
               <span class="badge text-[10px]">{t}</span>
@@ -43,6 +52,7 @@ const insights = (await getCollection("insights")).sort(
               return <time datetime={i.data.date.toISOString().split("T")[0]}>{s}</time>;
             })()}
           </p>
+          </div>
         </a>
       ))}
     </div>
