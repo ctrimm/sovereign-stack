@@ -1,0 +1,69 @@
+---
+// Client-side search over /api/listings.json. No framework, no build step.
+interface Props {
+  id?: string;
+}
+const { id = "site-search" } = Astro.props;
+---
+
+<form role="search" aria-label="Search the directory" id={`${id}-form`} class="w-full">
+  <label for={id} class="sr-only">Search sovereign products</label>
+  <input
+    id={id}
+    name="q"
+    type="search"
+    autocomplete="off"
+    placeholder="Search products, categories, or what they replace…"
+    class="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-base shadow-sm placeholder:text-stone-400"
+  />
+  <p id={`${id}-status`} class="sr-only" role="status" aria-live="polite"></p>
+  <ul id={`${id}-results`} class="mt-2 divide-y divide-stone-100 rounded-lg border border-stone-200 bg-white shadow-sm hidden"></ul>
+</form>
+
+<script define:vars={{ id }}>
+  const input = document.getElementById(id);
+  const results = document.getElementById(`${id}-results`);
+  const status = document.getElementById(`${id}-status`);
+  let index = null;
+
+  async function loadIndex() {
+    if (index) return index;
+    const res = await fetch("/api/listings.json");
+    index = await res.json();
+    return index;
+  }
+
+  function matches(item, q) {
+    const hay = [item.title, item.tagline, item.company.name, ...(item.replaces || []), ...(item.categories || [])]
+      .join(" ")
+      .toLowerCase();
+    return q
+      .toLowerCase()
+      .split(/\s+/)
+      .every((term) => hay.includes(term));
+  }
+
+  let timer;
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      const q = input.value.trim();
+      if (q.length < 2) {
+        results.classList.add("hidden");
+        results.innerHTML = "";
+        status.textContent = "";
+        return;
+      }
+      const data = await loadIndex();
+      const hits = data.filter((item) => matches(item, q)).slice(0, 8);
+      status.textContent = hits.length === 0 ? "No results" : `${hits.length} result${hits.length === 1 ? "" : "s"}`;
+      results.innerHTML = hits
+        .map(
+          (h) =>
+            `<li><a href="/listings/${h.slug}/" class="block px-4 py-3 hover:bg-stone-50"><span class="font-medium">${h.title}</span> <span class="text-sm text-stone-500">— ${h.tagline}</span></a></li>`
+        )
+        .join("");
+      results.classList.toggle("hidden", hits.length === 0);
+    }, 150);
+  });
+</script>

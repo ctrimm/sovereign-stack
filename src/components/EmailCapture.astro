@@ -1,0 +1,38 @@
+---
+// Day-one email capture. The newsletter launches later; this just collects
+// addresses. Set PUBLIC_NEWSLETTER_ENDPOINT to a form endpoint when ready.
+const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT;
+---
+
+<section aria-labelledby="newsletter-heading" class="rounded-2xl bg-stone-900 px-6 py-8 text-stone-100 sm:px-10">
+  <h2 id="newsletter-heading" class="text-xl font-semibold tracking-tight">
+    Get new sovereign listings in your inbox
+  </h2>
+  <p class="mt-2 max-w-xl text-sm text-stone-300">
+    A short, occasional email when we add new categories and products. No
+    newsletter yet — just a heads-up list for launch.
+  </p>
+  {endpoint ? (
+    <form action={endpoint} method="post" class="mt-4 flex max-w-md flex-col gap-2 sm:flex-row">
+      <label for="newsletter-email" class="sr-only">Email address</label>
+      <input
+        id="newsletter-email"
+        name="email"
+        type="email"
+        required
+        placeholder="you@example.com"
+        class="w-full rounded-lg border border-stone-700 bg-stone-800 px-4 py-2.5 text-sm text-white placeholder:text-stone-400"
+      />
+      <button
+        type="submit"
+        class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+      >
+        Notify me
+      </button>
+    </form>
+  ) : (
+    <p class="mt-4 text-sm text-stone-400">
+      Signup opens soon — check back after launch.
+    </p>
+  )}
+</section>

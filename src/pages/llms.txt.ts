@@ -1,0 +1,43 @@
+import type { APIRoute } from "astro";
+import { getCollection } from "astro:content";
+import { countryName } from "../lib/format";
+
+export const GET: APIRoute = async () => {
+  const site = "https://sovereignstack.co";
+  const categories = await getCollection("categories");
+  const listings = await getCollection("listings");
+
+  const lines = [
+    "# Sovereign Stack",
+    "",
+    "> A curated directory of sovereign technology: open-source, self-hostable,",
+    "> and independently-domiciled products from the EU, US, and rest of world,",
+    "> organized by jurisdiction.",
+    "",
+    "## Categories",
+    "",
+    ...categories.map((c) => `- [${c.data.title}](${site}/categories/${c.id}/): ${c.data.description}`),
+    "",
+    "## Listings",
+    "",
+    ...listings.map((l) => {
+      const d = l.data;
+      const bits = [
+        d.tagline,
+        `Domicile: ${countryName(d.company.domicile)}`,
+        d.openSource ? `License: ${d.license}` : "Proprietary",
+        d.selfHost ? "Self-hostable" : "Managed only",
+        d.replaces.length > 0 ? `Replaces: ${d.replaces.join(", ")}` : null,
+      ]
+        .filter(Boolean)
+        .join(". ");
+      return `- [${d.title}](${site}/listings/${l.id}/): ${bits}.`;
+    }),
+    "",
+    `Machine-readable feed: ${site}/api/listings.json`,
+  ];
+
+  return new Response(lines.join("\n"), {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });
+};

@@ -1,0 +1,89 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ListingCard from "../../components/ListingCard.astro";
+import { countryName } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const categories = await getCollection("categories");
+  const listings = await getCollection("listings");
+  return categories.map((category) => ({
+    params: { slug: category.id },
+    props: {
+      category,
+      items: listings.filter((l) => l.data.categories.includes(category.id)),
+    },
+  }));
+}
+
+const { category, items } = Astro.props;
+const c = category.data;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: `${c.title} — Sovereign Stack`,
+  description: c.description,
+  itemListElement: items.map((l, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: l.data.title,
+    url: `https://sovereignstack.co/listings/${l.id}/`,
+  })),
+};
+---
+
+<Base title={c.title} description={c.description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="text-sm text-stone-500">
+      <a href="/categories/" class="hover:underline">Categories</a>
+      <span aria-hidden="true"> / </span>
+      <span aria-current="page">{c.title}</span>
+    </nav>
+    <h1 class="mt-2 text-4xl font-semibold tracking-tight">{c.title}</h1>
+    <p class="mt-3 max-w-2xl text-lg text-stone-600">{c.description}</p>
+
+    <h2 class="mt-10 text-xl font-semibold tracking-tight">Compare</h2>
+    <div class="mt-4 overflow-x-auto rounded-xl border border-stone-200 bg-white shadow-sm">
+      <table class="w-full min-w-[720px] text-left text-sm">
+        <caption class="sr-only">Comparison of {c.title} products</caption>
+        <thead>
+          <tr class="border-b border-stone-200 text-xs uppercase tracking-wide text-stone-500">
+            <th scope="col" class="px-4 py-3 font-medium">Product</th>
+            <th scope="col" class="px-4 py-3 font-medium">Domicile</th>
+            <th scope="col" class="px-4 py-3 font-medium">License</th>
+            <th scope="col" class="px-4 py-3 font-medium">Self-host</th>
+            <th scope="col" class="px-4 py-3 font-medium">Data residency</th>
+            <th scope="col" class="px-4 py-3 font-medium">Pricing</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+          {items.map((l) => (
+            <tr>
+              <th scope="row" class="px-4 py-3 font-medium">
+                <a href={`/listings/${l.id}/`} class="text-indigo-700 hover:underline">{l.data.title}</a>
+                <span class="block text-xs font-normal text-stone-500">{l.data.tagline}</span>
+              </th>
+              <td class="px-4 py-3">{countryName(l.data.company.domicile)}</td>
+              <td class="px-4 py-3">{l.data.openSource ? `${l.data.license} (open)` : l.data.license}</td>
+              <td class="px-4 py-3">{l.data.selfHost ? "Yes" : "No"}</td>
+              <td class="px-4 py-3">
+                {l.data.dataResidency.length > 0
+                  ? l.data.dataResidency.map(countryName).join(", ")
+                  : "Your infrastructure"}
+              </td>
+              <td class="px-4 py-3">{l.data.pricing}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="mt-10 text-xl font-semibold tracking-tight">All {c.title} listings</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      {items.map((l) => (
+        <ListingCard listing={l} />
+      ))}
+    </div>
+  </div>
+</Base>

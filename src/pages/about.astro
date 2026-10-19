@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="About"
+  description="How Sovereign Stack curates listings, what the jurisdiction fields mean, and the advertising policy."
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="text-4xl font-semibold tracking-tight">About</h1>
+
+    <h2 class="mt-10 text-2xl font-semibold tracking-tight">What this is</h2>
+    <p class="mt-3 text-stone-600">
+      Sovereign Stack is a curated directory of technology you can actually
+      own: open-source software, self-hostable platforms, independently-domiciled
+      services, and open hardware. We catalog products from the EU, the US, and
+      the rest of the world — because digital sovereignty is not one country's
+      project.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-semibold tracking-tight">Methodology</h2>
+    <p class="mt-3 text-stone-600">
+      Every listing records the facts a sovereignty-minded buyer needs:
+    </p>
+    <ul class="mt-3 list-disc space-y-2 pl-6 text-stone-600">
+      <li><strong class="text-stone-900">Company domicile</strong> — the legal jurisdiction of the vendor, as an ISO country code.</li>
+      <li><strong class="text-stone-900">Data residency</strong> — where customer data can physically reside.</li>
+      <li><strong class="text-stone-900">License</strong> — SPDX identifier, or Proprietary.</li>
+      <li><strong class="text-stone-900">Self-hosting</strong> — whether you can run it on your own infrastructure.</li>
+      <li><strong class="text-stone-900">What it replaces</strong> — the incumbent product, so migrations are discoverable.</li>
+    </ul>
+    <p class="mt-3 text-stone-600">
+      Listings are editorial and free. Inclusion is not for sale.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-semibold tracking-tight">Advertising policy</h2>
+    <p class="mt-3 text-stone-600">
+      The directory is free to browse and free to be listed in. Revenue comes
+      from clearly labeled sponsorships: featured placements, category
+      sponsorships, and sponsored guides. Paid placement never changes editorial
+      rankings, and every paid slot is labeled as sponsored. Rankings are
+      editorial; visibility is for sale. That line is the product.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-semibold tracking-tight">AI access</h2>
+    <p class="mt-3 text-stone-600">
+      Every listing is published as clean semantic HTML with structured data,
+      plus a machine-readable JSON feed at <a href="/api/listings.json" class="underline">/api/listings.json</a>
+      and a summary at <a href="/llms.txt" class="underline">/llms.txt</a> for AI assistants and agents.
+    </p>
+  </div>
+</Base>
