@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Programmatic SEO/AEO engine + slot scarcity
+- **Decision:** Replicate OpenAlternative's playbook (verified: every SaaS product gets an "alternatives to X" page generated from listing data; long tail of generated pages; 1,700-line llms.txt; year-stamped comparison blog; freshness via GitHub API). Built: /alternatives/[product] (26 pages, e.g. "Sovereign alternatives to Gmail") and /jurisdictions/[country] (12 pages, our differentiator) with comparison tables, cards, FAQPage + ItemList JSON-LD on every page; llms.txt now lists alternatives + jurisdictions; 28 new listings (38 total, 9 categories incl. hardware/search/chat). Scarcity: slot caps in src/data/slots.ts (3 homepage spotlight, 1 banner/category, 8 strip) with live "X of Y left" inventory on /advertise and "your product here" placeholders on empty category pages.
+- **Evidence:** Piotr Kulpiński's programmatic-SEO guide (dirstarter.com); OA llms.txt/robots.txt read directly. Pages are data-driven (unique domicile/license/residency data per page) to stay clear of scaled-content-abuse policy.
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Doubled ad rates + commitment discounts
 - **Decision:** Monthly rates doubled vs the OpenAlternative-anchored draft: Silver $298 / Gold $598 / Platinum $1,198. Commitment ladder: 5% off quarterly, 15% off semi-annual, 35% off annual (annual effective $194/$389/$779 — near standard directory rates; monthly is the flexibility premium).
 - **Evidence:** Cory's call ("double them"). Unit economics (see MEMORY.md): ~11 sponsors ≈ OpenAlternative's $6.5K/mo at half the logo count; ~1.5 gross adds/month sustains 12 sponsors at 8% churn.

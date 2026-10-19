@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
-import { countryName } from "../../lib/format";
+import { countryName, residencyLabel } from "../../lib/format";
 
 export async function getStaticPaths() {
   const listings = await getCollection("listings");
@@ -83,7 +83,7 @@ const jsonLd = {
           </div>
           <div>
             <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Data residency</dt>
-            <dd class="mt-1 font-medium">{d.dataResidency.length > 0 ? d.dataResidency.map(countryName).join(", ") : "Your own infrastructure (self-hosted)"}</dd>
+            <dd class="mt-1 font-medium">{residencyLabel(d)}</dd>
           </div>
           <div>
             <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Deployment</dt>

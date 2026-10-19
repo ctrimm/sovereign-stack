@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
-import { countryName } from "../../lib/format";
+import { countryName, residencyLabel } from "../../lib/format";
 
 export async function getStaticPaths() {
   const categories = await getCollection("categories");
@@ -99,9 +99,7 @@ const jsonLd = {
               <td class="px-5 py-4">{l.data.openSource ? `${l.data.license} (open)` : l.data.license}</td>
               <td class="px-5 py-4">{l.data.selfHost ? "Yes" : "No"}</td>
               <td class="px-5 py-4">
-                {l.data.dataResidency.length > 0
-                  ? l.data.dataResidency.map(countryName).join(", ")
-                  : "Your infrastructure"}
+                {residencyLabel(l.data)}
               </td>
               <td class="px-5 py-4">{l.data.pricing}</td>
             </tr>

@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
 import Ticker from "../../components/Ticker.astro";
-import { countryName, slugify } from "../../lib/format";
+import { countryName, slugify, residencyLabel } from "../../lib/format";
 
 export async function getStaticPaths() {
   const listings = await getCollection("listings");
@@ -113,7 +113,7 @@ const faqJsonLd = {
                 {l.data.sponsored && <span class="badge ml-2 bg-amber text-[10px]">Sponsored</span>}
               </th>
               <td class="px-5 py-4">{l.data.categories.join(", ")}</td>
-              <td class="px-5 py-4">{l.data.dataResidency.map(countryName).join(", ") || "Self-hosted"}</td>
+              <td class="px-5 py-4">{residencyLabel(l.data)}</td>
               <td class="px-5 py-4">{l.data.license}</td>
               <td class="px-5 py-4">{l.data.openSource ? "Yes" : "No"}</td>
               <td class="px-5 py-4">{l.data.replaces.join(", ")}</td>

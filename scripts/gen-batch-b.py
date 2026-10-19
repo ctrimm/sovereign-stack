@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""Generate listing markdown files for batch B (new categories).
+Usage: python3 gen-batch-b.py  (run from ~/workspace/sovereign-stack)
+Idempotent: overwrites the files it owns.
+"""
+import os
+
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "content", "listings")
+
+def q(s):
+    return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+def arr(items):
+    return "[" + ", ".join(q(i) for i in items) + "]"
+
+# slug, title, tagline, website, categories, replaces, license, openSource,
+# pricing, co_name, co_dom, co_founded, residency, selfHost, managed, gdpr, maturity, body
+LISTINGS = [
+    # ---- password managers ----
+    ("bitwarden", "Bitwarden", "Open-source password manager.", "https://bitwarden.com",
+     ["password-managers"], ["1Password", "LastPass"], "AGPL-3.0", True, "Freemium",
+     "Bitwarden Inc", "US", 2016, [], True, True,
+     "US domicile; self-hostable.", "Established",
+     "Bitwarden is an open-source password manager with end-to-end encryption, self-hosting, and a generous free tier."),
+    ("proton-pass", "Proton Pass", "Password manager from Proton.", "https://proton.me/pass",
+     ["password-managers"], ["1Password"], "GPL-3.0", True, "Freemium",
+     "Proton AG", "CH", 2023, ["CH"], False, True,
+     "Swiss domicile; end-to-end encrypted.", "Established",
+     "Proton Pass is a Swiss end-to-end encrypted password manager with open-source clients and a free tier."),
+    # ---- photo management ----
+    ("ente", "Ente", "Encrypted Google Photos alternative from India.", "https://ente.io",
+     ["photo-management"], ["Google Photos"], "AGPL-3.0", True, "Freemium",
+     "Ente", "IN", 2020, [], True, True,
+     "Indian domicile; end-to-end encrypted.", "Beta",
+     "Ente is an Indian open-source, end-to-end encrypted photo backup service and a credible Google Photos replacement."),
+    ("photoprism", "PhotoPrism", "Self-hosted photo library from Germany.", "https://www.photoprism.app",
+     ["photo-management"], ["Google Photos"], "AGPL-3.0", True, "Freemium",
+     "PhotoPrism UG", "DE", 2018, [], True, False,
+     "German project; runs on your server.", "Beta",
+     "PhotoPrism is a German open-source, AI-assisted photo library you self-host on your own hardware."),
+    # ---- social ----
+    ("mastodon", "Mastodon", "Decentralized social network from Germany.", "https://joinmastodon.org",
+     ["social"], ["Twitter", "X"], "AGPL-3.0", True, "Free",
+     "Mastodon gGmbH", "DE", 2016, [], True, False,
+     "German nonprofit; federated protocol.", "Established",
+     "Mastodon is a German-built decentralized social network where independent servers federate via ActivityPub."),
+    ("pixelfed", "Pixelfed", "Decentralized photo sharing from Canada.", "https://pixelfed.org",
+     ["social"], ["Instagram"], "AGPL-3.0", True, "Free",
+     "Pixelfed", "CA", 2018, [], True, False,
+     "Canadian project; federated protocol.", "Beta",
+     "Pixelfed is a Canadian open-source, federated photo-sharing platform — Instagram without the ads."),
+    ("peertube", "PeerTube", "Federated video hosting from France.", "https://joinpeertube.org",
+     ["social"], ["YouTube"], "AGPL-3.0", True, "Free",
+     "Framasoft", "FR", 2017, [], True, False,
+     "French nonprofit; peer-to-peer video.", "Established",
+     "PeerTube is a French open-source federated video platform using peer-to-peer streaming to keep hosting costs low."),
+    # ---- maps ----
+    ("organic-maps", "Organic Maps", "Offline maps from Estonia.", "https://organicmaps.app",
+     ["maps"], ["Google Maps"], "Apache-2.0", True, "Free",
+     "Organic Maps OÜ", "EE", 2021, [], False, False,
+     "Estonian domicile; offline-first, no tracking.", "Beta",
+     "Organic Maps is an Estonian open-source offline maps app with no ads and no tracking."),
+    ("osmand", "OsmAnd", "OpenStreetMap navigation from the Netherlands.", "https://osmand.net",
+     ["maps"], ["Google Maps"], "GPL-3.0", True, "Freemium",
+     "OsmAnd BV", "NL", 2010, [], False, False,
+     "Dutch domicile; offline maps.", "Established",
+     "OsmAnd is a Dutch open-source navigation app built on OpenStreetMap, with full offline support."),
+    # ---- developer tools ----
+    ("supabase", "Supabase", "Open-source Firebase alternative.", "https://supabase.com",
+     ["developer-tools"], ["Firebase"], "Apache-2.0", True, "Freemium",
+     "Supabase Inc", "US", 2020, [], True, True,
+     "US domicile; self-hostable.", "Established",
+     "Supabase is an open-source backend platform with Postgres, auth, and storage — the open alternative to Firebase."),
+    ("appwrite", "Appwrite", "Self-hosted backend as a service.", "https://appwrite.io",
+     ["developer-tools"], ["Firebase"], "BSD-3-Clause", True, "Freemium",
+     "Appwrite", "US", 2019, [], True, True,
+     "US domicile; self-hostable.", "Established",
+     "Appwrite is an open-source backend server with auth, databases, and storage you can self-host."),
+    ("nocodb", "NocoDB", "Open-source Airtable alternative.", "https://www.nocodb.com",
+     ["developer-tools"], ["Airtable"], "AGPL-3.0", True, "Freemium",
+     "NocoDB Inc", "US", 2021, [], True, True,
+     "US domicile; self-hostable.", "Beta",
+     "NocoDB turns any database into a smart spreadsheet — an open-source Airtable you can self-host."),
+    ("codeberg", "Codeberg", "Nonprofit code hosting from Germany.", "https://codeberg.org",
+     ["developer-tools"], ["GitHub"], "GPL-3.0", True, "Free",
+     "Codeberg e.V.", "DE", 2019, ["DE"], False, True,
+     "German nonprofit; community-run.", "Beta",
+     "Codeberg is a German nonprofit code-hosting platform built on Forgejo, run democratically by its community."),
+    ("n8n", "n8n", "Workflow automation from Berlin.", "https://n8n.io",
+     ["developer-tools"], ["Zapier"], "Sustainable Use License", False, "Freemium",
+     "n8n GmbH", "DE", 2019, [], True, True,
+     "German domicile; self-hostable.", "Established",
+     "n8n is a Berlin-built workflow automation platform with a fair-code license — self-host it or use the cloud."),
+    ("activepieces", "Activepieces", "Open-source automation from Greece.", "https://www.activepieces.com",
+     ["developer-tools"], ["Zapier"], "MIT", True, "Freemium",
+     "Activepieces", "GR", 2023, [], True, True,
+     "Greek domicile; self-hostable.", "Beta",
+     "Activepieces is a Greek open-source Zapier alternative with an MIT license and self-hosting."),
+    # ---- identity & auth ----
+    ("zitadel", "ZITADEL", "Identity management from Switzerland.", "https://zitadel.com",
+     ["identity-auth"], ["Auth0", "Okta"], "Apache-2.0", True, "Freemium",
+     "ZITADEL", "CH", 2020, [], True, True,
+     "Swiss domicile; self-hostable.", "Beta",
+     "ZITADEL is a Swiss open-source identity and access management platform — login, SSO, and MFA you can self-host."),
+    ("keycloak", "Keycloak", "Open-source identity from Red Hat.", "https://www.keycloak.org",
+     ["identity-auth"], ["Auth0", "Okta"], "Apache-2.0", True, "Free",
+     "Red Hat Inc", "US", 2014, [], True, False,
+     "US domicile; the industry standard.", "Established",
+     "Keycloak is Red Hat's open-source identity provider — SSO, SAML, and OpenID Connect for any stack."),
+    ("hanko", "Hanko", "Passkey authentication from Germany.", "https://www.hanko.io",
+     ["identity-auth"], ["Auth0", "Clerk"], "MIT", True, "Freemium",
+     "Hanko GmbH", "DE", 2021, [], True, True,
+     "German domicile; passkey-first.", "Beta",
+     "Hanko is a German open-source authentication platform built around passkeys instead of passwords."),
+    # ---- business apps ----
+    ("odoo", "Odoo", "Open-source ERP from Belgium.", "https://www.odoo.com",
+     ["business-apps"], ["Salesforce", "SAP"], "LGPL-3.0", True, "Freemium",
+     "Odoo SA", "BE", 2005, [], True, True,
+     "Belgian domicile; self-hostable.", "Established",
+     "Odoo is a Belgian open-source suite covering CRM, ERP, accounting, and more — used by millions of companies."),
+    ("erpnext", "ERPNext", "Open-source ERP from India.", "https://erpnext.com",
+     ["business-apps"], ["SAP", "Odoo"], "GPL-3.0", True, "Freemium",
+     "Frappe Technologies", "IN", 2008, [], True, True,
+     "Indian domicile; self-hostable.", "Established",
+     "ERPNext is an Indian open-source ERP covering accounting, HR, manufacturing, and retail."),
+    ("twenty", "Twenty", "Open-source CRM from France.", "https://twenty.com",
+     ["business-apps"], ["Salesforce", "HubSpot"], "AGPL-3.0", True, "Freemium",
+     "Twenty", "FR", 2023, [], True, True,
+     "French domicile; self-hostable.", "Beta",
+     "Twenty is a French open-source CRM — a modern Salesforce alternative you can self-host."),
+    ("baserow", "Baserow", "Open-source database from the Netherlands.", "https://baserow.io",
+     ["business-apps"], ["Airtable"], "MIT", True, "Freemium",
+     "Baserow BV", "NL", 2021, [], True, True,
+     "Dutch domicile; self-hostable.", "Beta",
+     "Baserow is a Dutch open-source no-code database — Airtable without the lock-in."),
+    ("chatwoot", "Chatwoot", "Open-source customer chat from India.", "https://www.chatwoot.com",
+     ["business-apps"], ["Intercom", "Zendesk"], "MIT", True, "Freemium",
+     "Chatwoot Inc", "IN", 2019, [], True, True,
+     "Indian domicile; self-hostable.", "Established",
+     "Chatwoot is an Indian open-source customer engagement platform — live chat, email, and social in one inbox."),
+    ("brevo", "Brevo", "Email marketing from France.", "https://www.brevo.com",
+     ["business-apps"], ["Mailchimp"], "Proprietary", False, "Freemium",
+     "Brevo", "FR", 2012, ["FR"], False, True,
+     "French domicile; GDPR-native.", "Established",
+     "Brevo (formerly Sendinblue) is a French email marketing and CRM platform with GDPR-native data handling."),
+    ("cal-com", "Cal.com", "Open-source scheduling.", "https://cal.com",
+     ["business-apps"], ["Calendly"], "AGPL-3.0", True, "Freemium",
+     "Cal.com Inc", "US", 2021, [], True, True,
+     "US domicile; self-hostable.", "Established",
+     "Cal.com is the open-source Calendly alternative — self-host your scheduling infrastructure."),
+    ("limesurvey", "LimeSurvey", "Open-source surveys from Germany.", "https://www.limesurvey.org",
+     ["business-apps"], ["SurveyMonkey"], "GPL-3.0", True, "Freemium",
+     "LimeSurvey GmbH", "DE", 2003, [], True, True,
+     "German domicile; self-hostable.", "Established",
+     "LimeSurvey is a German open-source survey platform — the self-hostable alternative to SurveyMonkey."),
+    ("documenso", "Documenso", "Open-source e-signing from Germany.", "https://documenso.com",
+     ["business-apps"], ["DocuSign"], "AGPL-3.0", True, "Freemium",
+     "Documenso", "DE", 2023, [], True, True,
+     "German domicile; self-hostable.", "Beta",
+     "Documenso is a German open-source DocuSign alternative with legally binding e-signatures."),
+    ("shopware", "Shopware", "Open-source e-commerce from Germany.", "https://www.shopware.com",
+     ["business-apps"], ["Shopify"], "MIT", True, "Freemium",
+     "shopware AG", "DE", 2000, [], True, True,
+     "German domicile; self-hostable.", "Established",
+     "Shopware is a German open-source e-commerce platform — a serious self-hostable Shopify alternative."),
+    ("tally", "Tally", "Simple forms from Belgium.", "https://tally.so",
+     ["business-apps"], ["Typeform", "Google Forms"], "Proprietary", False, "Freemium",
+     "Tally", "BE", 2020, ["BE"], False, True,
+     "Belgian domicile; generous free tier.", "Beta",
+     "Tally is a Belgian form builder with a generous free tier — a simpler Typeform alternative."),
+    ("sylius", "Sylius", "Open-source e-commerce from Poland.", "https://sylius.com",
+     ["business-apps"], ["Shopify"], "MIT", True, "Freemium",
+     "Sylius", "PL", 2011, [], True, False,
+     "Polish domicile; developer-first.", "Established",
+     "Sylius is a Polish open-source e-commerce framework for developers who want full control."),
+    # ---- design ----
+    ("penpot", "Penpot", "Open-source design tool from Spain.", "https://penpot.app",
+     ["design"], ["Figma"], "MPL-2.0", True, "Freemium",
+     "Kaleidos", "ES", 2011, [], True, True,
+     "Spanish domicile; self-hostable.", "Beta",
+     "Penpot is a Spanish open-source design and prototyping platform — Figma without the acquisition risk."),
+    ("excalidraw", "Excalidraw", "Hand-drawn whiteboards, open source.", "https://excalidraw.com",
+     ["design"], ["Miro"], "MIT", True, "Freemium",
+     "Excalidraw", "US", 2020, [], True, True,
+     "US domicile; end-to-end encrypted.", "Established",
+     "Excalidraw is an open-source virtual whiteboard with a hand-drawn style and end-to-end encrypted collaboration."),
+    # ---- monitoring ----
+    ("checkmk", "Checkmk", "Infrastructure monitoring from Germany.", "https://checkmk.com",
+     ["monitoring"], ["Datadog"], "GPL-2.0", True, "Freemium",
+     "Checkmk GmbH", "DE", 2009, [], True, True,
+     "German domicile; self-hostable.", "Established",
+     "Checkmk is a German open-source infrastructure monitoring platform used by enterprises worldwide."),
+    ("zabbix", "Zabbix", "Enterprise monitoring from Latvia.", "https://www.zabbix.com",
+     ["monitoring"], ["Datadog", "Nagios"], "AGPL-3.0", True, "Free",
+     "Zabbix SIA", "LV", 2001, [], True, False,
+     "Latvian domicile; fully open source.", "Established",
+     "Zabbix is a Latvian open-source monitoring solution for networks, servers, and cloud — fully free."),
+    # ---- publishing ----
+    ("ghost", "Ghost", "Independent publishing from Singapore.", "https://ghost.org",
+     ["publishing"], ["Substack", "WordPress"], "MIT", True, "Freemium",
+     "Ghost Foundation", "SG", 2013, [], True, True,
+     "Singaporean nonprofit; self-hostable.", "Established",
+     "Ghost is a Singaporean nonprofit publishing platform — newsletters and memberships without Substack's cut."),
+    ("kirby", "Kirby", "File-based CMS from Germany.", "https://getkirby.com",
+     ["publishing"], ["WordPress"], "Proprietary", False, "Paid",
+     "Bastian Allgeier GmbH", "DE", 2012, [], True, False,
+     "German domicile; no database needed.", "Established",
+     "Kirby is a German file-based CMS — no database, full control, one-time license."),
+    ("buttondown", "Buttondown", "Newsletter platform from the US.", "https://buttondown.com",
+     ["publishing"], ["Substack"], "Proprietary", False, "Freemium",
+     "Buttondown", "US", 2017, ["US"], False, True,
+     "US domicile; indie-run.", "Established",
+     "Buttondown is an indie-run newsletter platform — a simpler, cheaper Substack alternative."),
+    ("castopod", "Castopod", "Podcast hosting from France.", "https://castopod.org",
+     ["publishing"], ["Anchor", "Spotify for Podcasters"], "AGPL-3.0", True, "Freemium",
+     "Ad Aures", "FR", 2019, [], True, True,
+     "French domicile; self-hostable.", "Beta",
+     "Castopod is a French open-source podcast hosting platform with ActivityPub federation built in."),
+]
+
+
+def render(entry):
+    (slug, title, tagline, website, categories, replaces, license, openSource,
+     pricing, co_name, co_dom, co_founded, residency, selfHost, managed,
+     gdpr, maturity, body) = entry
+    lines = [
+        "---",
+        f"title: {q(title)}",
+        f"tagline: {q(tagline)}",
+        f"website: {q(website)}",
+        f"categories: {arr(categories)}",
+        f"replaces: {arr(replaces)}",
+        f"license: {q(license)}",
+        f"openSource: {'true' if openSource else 'false'}",
+        f"pricing: {q(pricing)}",
+        "company:",
+        f"  name: {q(co_name)}",
+        f"  domicile: {q(co_dom)}",
+    ]
+    if co_founded:
+        lines.append(f"  founded: {co_founded}")
+    lines += [
+        f"dataResidency: {arr(residency)}",
+        f"selfHost: {'true' if selfHost else 'false'}",
+        f"managed: {'true' if managed else 'false'}",
+        f"gdpr: {q(gdpr)}",
+        f"maturity: {q(maturity)}",
+        "---",
+        "",
+        body,
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    for entry in LISTINGS:
+        path = os.path.join(OUT, entry[0] + ".md")
+        with open(path, "w") as f:
+            f.write(render(entry))
+    print(f"wrote {len(LISTINGS)} listings to {OUT}")
+
+
+if __name__ == "__main__":
+    main()

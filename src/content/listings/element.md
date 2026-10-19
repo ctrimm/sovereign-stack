@@ -3,7 +3,7 @@ title: Element
 tagline: Secure messaging on the open Matrix network.
 website: https://element.io
 replaces: ["Slack", "Microsoft Teams", "WhatsApp"]
-categories: ["office-productivity"]
+categories: ["communication"]
 license: "Apache-2.0"
 openSource: true
 pricing: Freemium
