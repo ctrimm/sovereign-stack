@@ -1,0 +1,181 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import ListingCard from "../components/ListingCard.astro";
+
+const listings = await getCollection("listings");
+// A real listing, rendered as the ad-unit example (clearly labeled).
+const exampleListing = listings.find((l) => l.id === "plausible") ?? listings[0];
+
+const tiers = [
+  {
+    name: "Silver",
+    price: "$149",
+    per: "/month",
+    blurb: "Your ad rotates across every page of the directory.",
+    features: [
+      "Sponsored card in listing grids",
+      "Sponsored entry in category comparisons",
+      "Rotates across every page",
+    ],
+    featured: false,
+  },
+  {
+    name: "Gold",
+    price: "$299",
+    per: "/month",
+    blurb: "Top visibility: homepage spotlight, category banners, sponsor strip.",
+    features: [
+      "Everything in Silver",
+      "Sponsored spotlight on the homepage",
+      "Banner slot on category pages",
+      "Logo in the homepage sponsor strip",
+    ],
+    featured: true,
+  },
+  {
+    name: "Platinum",
+    price: "$599",
+    per: "/month",
+    blurb: "Maximum presence, shown twice as often as Gold.",
+    features: [
+      "Everything in Gold",
+      "Shown twice as often as Gold",
+      "Sponsored migration guide included",
+      "Priority support",
+    ],
+    featured: false,
+  },
+];
+---
+
+<Base
+  title="Advertise"
+  description="Put your sovereign product in front of buyers comparing alternatives. Sponsored placements on Sovereign Stack — labeled, transparent, and never mixed with editorial rankings."
+>
+  <div class="mx-auto max-w-5xl px-4">
+    <section class="pb-8 pt-14 text-center sm:pt-20">
+      <span class="inline-block rotate-[-2deg] rounded-full border-2 border-ink bg-amber px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">
+        For vendors
+      </span>
+      <h1 class="mx-auto mt-6 max-w-3xl text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl">
+        Reach buyers <span class="hl-lime">ditching</span> Big Tech.
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
+        Our readers are comparing sovereign alternatives right now — CTOs,
+        homelabbers, and privacy-minded teams with procurement budgets. Put
+        your product where the decision happens.
+      </p>
+      <p class="mt-4 inline-block rounded-full border-2 border-dashed border-ink-faint px-4 py-2 text-sm font-semibold text-ink-soft">
+        Launch pricing below is draft — founding sponsors lock it in for 12 months.
+      </p>
+    </section>
+
+    <section aria-labelledby="tiers-heading" class="pt-8">
+      <h2 id="tiers-heading" class="sr-only">Sponsorship tiers</h2>
+      <div class="grid gap-5 md:grid-cols-3">
+        {tiers.map((t) => (
+          <article
+            class:list={[
+              "relative rounded-[20px] border-2 border-ink bg-cream p-7 shadow-hard",
+              t.featured && "rotate-[-0.5deg] bg-ink text-cream shadow-hard-lg",
+            ]}
+          >
+            {t.featured && (
+              <span class="absolute -top-3.5 left-6 rotate-[-3deg] rounded-full border-2 border-ink bg-coral px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-ink shadow-hard-sm">
+                Most popular
+              </span>
+            )}
+            <h3 class:list={["text-xl font-black tracking-tight", t.featured && "text-cream"]}>{t.name}</h3>
+            <p class:list={["mt-1 text-sm", t.featured ? "text-cream/70" : "text-ink-soft"]}>{t.blurb}</p>
+            <p class="mt-4">
+              <span class="text-4xl font-black tracking-tight">{t.price}</span>
+              <span class:list={["text-sm font-semibold", t.featured ? "text-cream/70" : "text-ink-faint"]}>{t.per}</span>
+            </p>
+            <ul class:list={["mt-5 space-y-2.5 text-sm font-medium", t.featured ? "text-cream/85" : "text-ink-soft"]}>
+              {t.features.map((f) => (
+                <li class="flex gap-2"><span aria-hidden="true">✓</span><span>{f}</span></li>
+              ))}
+            </ul>
+            <p class="mt-6">
+              <a
+                href="mailto:advertise@sovereignstack.co?subject=Sovereign%20Stack%20sponsorship"
+                class:list={[
+                  "inline-block rounded-full border-2 px-6 py-2.5 text-sm font-extrabold",
+                  t.featured
+                    ? "border-cream bg-lime text-ink hover:brightness-105"
+                    : "border-ink bg-ink text-cream hover:bg-black",
+                ]}
+              >
+                Become a {t.name} sponsor
+              </a>
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="units-heading" class="pt-16">
+      <h2 id="units-heading" class="text-3xl font-black tracking-tight">What sponsors get</h2>
+      <p class="mt-2 max-w-2xl text-ink-soft">
+        Every placement is labeled <strong class="text-ink">Sponsored</strong>. Rankings stay
+        editorial — sponsorship buys visibility, never position.
+      </p>
+      <div class="mt-8 grid gap-8 lg:grid-cols-2">
+        <div>
+          <h3 class="text-lg font-extrabold">Sponsored feed card</h3>
+          <p class="mt-1 text-sm text-ink-soft">Appears inline in listing grids, styled like a listing but badged and tinted. Outbound links carry <code class="rounded bg-paper px-1.5 py-0.5 text-[13px] font-bold">rel="sponsored"</code>.</p>
+          <div class="mt-4"><ListingCard listing={exampleListing} example={true} /></div>
+        </div>
+        <div class="space-y-6">
+          <div class="rounded-[20px] border-2 border-ink bg-cream p-6 shadow-hard">
+            <h3 class="text-lg font-extrabold">Category spotlight banner</h3>
+            <p class="mt-1 text-sm leading-relaxed text-ink-soft">A pinned banner above the comparison table on your category page — the first thing buyers see when comparing options.</p>
+            <div class="mt-4 rounded-xl border-2 border-dashed border-ink-faint bg-paper p-5 text-center">
+              <span class="inline-block rotate-2 rounded-full border-2 border-ink bg-amber px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider shadow-hard-sm">Sponsored</span>
+              <p class="mt-3 font-extrabold">Your product here</p>
+              <p class="mt-1 text-sm text-ink-soft">Domicile · License · Data residency — your pitch, our format.</p>
+            </div>
+          </div>
+          <div class="rounded-[20px] border-2 border-ink bg-cream p-6 shadow-hard">
+            <h3 class="text-lg font-extrabold">And then some</h3>
+            <ul class="mt-3 space-y-3 text-sm leading-relaxed text-ink-soft">
+              <li><strong class="text-ink">Sponsored migration guides</strong> — long-form "Migrating from Gmail to X" walkthroughs, labeled, yours to co-author.</li>
+              <li><strong class="text-ink">Sovereignty Verified badge</strong> — an annual paid audit of domicile, residency, and license claims. Trust, as a product.</li>
+              <li><strong class="text-ink">Newsletter slot</strong> — launching with the newsletter; founding sponsors get first refusal.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="audience-heading" class="mt-16 rounded-3xl border-2 border-ink bg-ink p-8 text-cream shadow-hard-lg sm:p-10">
+      <h2 id="audience-heading" class="text-3xl font-black tracking-tight">Who you're reaching</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-cream/80">
+        EU tech leads choosing GDPR-safe vendors. Homelabbers and self-hosters
+        who run real infrastructure. MSPs and consultants reselling the stack.
+        People comparing alternatives are one click from buying — that's the
+        whole business model.
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-2xl border-2 border-cream/20 bg-cream/5 p-5">
+          <p class="text-3xl font-black text-lime">High intent</p>
+          <p class="mt-1 text-sm text-cream/70">Readers arrive mid-comparison, not mid-scroll.</p>
+        </div>
+        <div class="rounded-2xl border-2 border-cream/20 bg-cream/5 p-5">
+          <p class="text-3xl font-black text-sky">Technical</p>
+          <p class="mt-1 text-sm text-cream/70">They read domicile, license, and residency fields.</p>
+        </div>
+        <div class="rounded-2xl border-2 border-cream/20 bg-cream/5 p-5">
+          <p class="text-3xl font-black text-amber">Budgeted</p>
+          <p class="mt-1 text-sm text-cream/70">Compliance pressure means procurement budgets.</p>
+        </div>
+      </div>
+      <p class="mt-8">
+        <a href="mailto:advertise@sovereignstack.co?subject=Sovereign%20Stack%20sponsorship" class="inline-block rounded-full bg-lime px-8 py-3.5 font-extrabold text-ink hover:brightness-105">
+          Get the full media kit →
+        </a>
+      </p>
+    </section>
+  </div>
+</Base>

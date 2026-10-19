@@ -4,10 +4,19 @@ import Base from "../layouts/Base.astro";
 import ListingCard from "../components/ListingCard.astro";
 import SearchBox from "../components/SearchBox.astro";
 import EmailCapture from "../components/EmailCapture.astro";
+import SponsorStrip from "../components/SponsorStrip.astro";
+import { categoryDot } from "../lib/categories";
 
 const categories = await getCollection("categories");
 const listings = await getCollection("listings");
-const featured = listings.filter((l) => l.data.featured);
+const featured = listings.filter((l) => l.data.featured && !l.data.sponsored);
+const sponsors = listings.filter((l) => l.data.sponsored);
+
+// Ticker pairs: "DITCH X → TRY Y", from real listing data.
+const tickerItems = listings
+  .filter((l) => l.data.replaces.length > 0)
+  .slice(0, 6)
+  .map((l) => ({ from: l.data.replaces[0].toUpperCase(), to: l.data.title.toUpperCase() }));
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -29,44 +38,87 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <div class="mx-auto max-w-5xl px-4">
-    <section class="py-12 sm:py-16">
-      <h1 class="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-        Choose whose laws govern your data.
+    <section class="pb-10 pt-14 text-center sm:pt-20">
+      <div class="flex flex-wrap justify-center gap-3" aria-hidden="true">
+        <span class="rotate-[-4deg] rounded-full border-2 border-ink bg-lime px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">Open source</span>
+        <span class="rotate-[3deg] rounded-full border-2 border-ink bg-sky px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">Self-hostable</span>
+        <span class="rotate-[-2deg] rounded-full border-2 border-ink bg-amber px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">EU + US + beyond</span>
+      </div>
+      <h1 class="mx-auto mt-8 max-w-4xl text-5xl font-black leading-[1.02] tracking-tight sm:text-7xl">
+        Choose whose <span class="hl-coral">laws</span> govern your <span class="hl-sky">data</span>.
       </h1>
-      <p class="mt-4 max-w-2xl text-lg text-stone-600">
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
         A curated directory of sovereign technology — open source, self-hostable,
         and independently-domiciled products from every continent, organized by
         jurisdiction.
       </p>
-      <div class="mt-8 max-w-2xl">
+      <div class="mx-auto mt-8 max-w-2xl text-left">
         <SearchBox />
       </div>
-      <p class="mt-3 text-sm text-stone-500">
+      <p class="mt-4 text-sm font-semibold text-ink-faint">
         {listings.length} products across {categories.length} categories and counting.
       </p>
     </section>
+  </div>
 
-    <section aria-labelledby="categories-heading" class="py-8">
-      <h2 id="categories-heading" class="text-2xl font-semibold tracking-tight">Browse by category</h2>
-      <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {tickerItems.length > 0 && (
+    <div class="relative left-1/2 w-screen -translate-x-1/2 -rotate-1 overflow-hidden border-y-2 border-ink bg-ink py-3 text-cream" aria-hidden="true">
+      <div class="ticker-track text-[15px] font-bold tracking-wide">
+        {Array(2).fill(0).map(() => (
+          <span>
+            {tickerItems.map((t) => (
+              <span>DITCH <span class="text-lime">{t.from}</span> → TRY <span class="text-amber">{t.to}</span><span class="mx-4 text-ink-faint">★</span></span>
+            ))}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <div class="mx-auto max-w-5xl px-4">
+    <section aria-labelledby="categories-heading" class="pt-14">
+      <div class="flex items-center gap-3">
+        <h2 id="categories-heading" class="text-3xl font-black tracking-tight">Browse by category</h2>
+        <span class="rounded-full bg-ink px-3 py-1 text-[13px] font-extrabold text-cream">{categories.length}</span>
+      </div>
+      <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c) => (
           <li>
             <a
               href={`/categories/${c.id}/`}
-              class="block h-full rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+              class="block h-full rounded-[20px] border-2 border-ink bg-cream p-6 shadow-hard transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard-lg"
             >
-              <span class="font-medium">{c.data.title}</span>
-              <span class="mt-1 block text-sm text-stone-600">{c.data.description}</span>
+              <span class:list={["block h-4 w-4 rounded-full border-2 border-ink", categoryDot(c.id)]} aria-hidden="true"></span>
+              <span class="mt-4 block text-lg font-extrabold tracking-tight">{c.data.title}</span>
+              <span class="mt-2 block text-sm leading-relaxed text-ink-soft">{c.data.description}</span>
             </a>
           </li>
         ))}
       </ul>
     </section>
 
+    {sponsors.length > 0 && (
+      <section aria-labelledby="sponsored-heading" class="pt-14">
+        <div class="flex flex-wrap items-center gap-3">
+          <h2 id="sponsored-heading" class="text-3xl font-black tracking-tight">Sponsored spotlight</h2>
+          <span class="rotate-2 rounded-full border-2 border-ink bg-amber px-3 py-1 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">Paid placement</span>
+        </div>
+        <p class="mt-2 text-sm text-ink-soft">Sponsors keep the directory free. Rankings are editorial — never for sale.</p>
+        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+          {sponsors.map((l) => (
+            <ListingCard listing={l} />
+          ))}
+        </div>
+      </section>
+    )}
+
     {featured.length > 0 && (
-      <section aria-labelledby="featured-heading" class="py-8">
-        <h2 id="featured-heading" class="text-2xl font-semibold tracking-tight">Featured</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <section aria-labelledby="featured-heading" class="pt-14">
+        <div class="flex items-center gap-3">
+          <h2 id="featured-heading" class="text-3xl font-black tracking-tight">Featured</h2>
+          <span class="rounded-full bg-ink px-3 py-1 text-[13px] font-extrabold text-cream">staff picks</span>
+        </div>
+        <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((l) => (
             <ListingCard listing={l} />
           ))}
@@ -74,27 +126,27 @@ const jsonLd = {
       </section>
     )}
 
-    <section aria-labelledby="jurisdiction-heading" class="py-8">
-      <h2 id="jurisdiction-heading" class="text-2xl font-semibold tracking-tight">
-        Sovereignty is relative to you
+    <section aria-labelledby="jurisdiction-heading" class="mt-14 rounded-3xl border-2 border-ink bg-ink p-8 text-cream shadow-hard-lg sm:p-10">
+      <h2 id="jurisdiction-heading" class="text-3xl font-black tracking-tight">
+        Sovereignty is <span class="text-lime">relative to you</span>
       </h2>
-      <div class="mt-4 max-w-3xl space-y-3 text-stone-600">
-        <p>
-          There is no single "sovereign" product. A German company wants EU
-          domicile and GDPR-native tooling. A Brazilian buyer may want options
-          outside US jurisdiction entirely. Every listing here records company
-          domicile, data residency, license, and self-hosting options — so you
-          can filter by what sovereignty means for your jurisdiction.
-        </p>
-        <p>
-          <a href="/about/" class="font-medium text-indigo-700 underline hover:text-indigo-900">
-            Read our methodology and advertising policy
-          </a>
-        </p>
-      </div>
+      <p class="mt-4 max-w-3xl leading-relaxed text-cream/80">
+        There is no single "sovereign" product. A German company wants EU
+        domicile and GDPR-native tooling. A Brazilian buyer may want options
+        outside US jurisdiction entirely. Every listing here records company
+        domicile, data residency, license, and self-hosting options — so you can
+        filter by what sovereignty means for your jurisdiction.
+      </p>
+      <p class="mt-5">
+        <a href="/about/" class="font-bold text-amber underline hover:text-lime">
+          Read our methodology and advertising policy →
+        </a>
+      </p>
     </section>
 
-    <div class="py-8">
+    <SponsorStrip sponsors={sponsors} />
+
+    <div class="pt-14">
       <EmailCapture />
     </div>
   </div>

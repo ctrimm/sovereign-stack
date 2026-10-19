@@ -25,6 +25,16 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Design direction: Sticker Book
+- **Decision:** Rebuilt the site in the "Sticker Book" direction Cory picked from three mocks (Control Room, Sticker Book, Aurora): cream paper, ink borders, hard offset shadows, sticker badges, "DITCH X → TRY Y" ticker.
+- **Evidence:** Cory: v1 "looks so freaking stale... make the design look better. More fun, perhaps."
+- **Date:** 2026-10-19
+
+## 2026-10-19 — Sponsored inventory replicates the OpenAlternative playbook
+- **Decision:** First-class sponsored slots modeled on openalternative.co/advertise (verified 2026-10-19): Silver $147 / Gold $297 / Platinum $597 via Revinel — inline sponsored feed cards, category placements, homepage spots. Ours: draft launch pricing Silver $149 / Gold $299 / Platinum $599 (Cory to confirm); placements = sponsored feed cards (amber sticker, rel="sponsored"), category spotlight banner pinned above comparison tables, homepage sponsored spotlight, sponsor logo strip, listing-page sidebar slot, /advertise media kit. Extras: Sovereignty Verified badge, sponsored migration guides, newsletter slot (later).
+- **Evidence:** OpenAlternative's advertise page + Revinel-served inline ad units observed on their homepage; Threads post: "$4–8K/mo, software companies pay for ad slots."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — AI-friendly as a first-class requirement
 - **Decision:** Semantic HTML + JSON-LD on every page, `llms.txt`, and a JSON feed at `/api/listings.json`.
 - **Evidence:** AI search is shifting discovery to zero-click; structured, citable pages keep the directory discoverable by assistants and agents.

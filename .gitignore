@@ -17,3 +17,6 @@ node_modules/
 
 # os
 .DS_Store
+
+# design mocks (not shipped)
+design-mocks/

@@ -8,19 +8,30 @@ const { id = "site-search" } = Astro.props;
 
 <form role="search" aria-label="Search the directory" id={`${id}-form`} class="w-full">
   <label for={id} class="sr-only">Search sovereign products</label>
-  <input
-    id={id}
-    name="q"
-    type="search"
-    autocomplete="off"
-    placeholder="Search products, categories, or what they replace…"
-    class="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-base shadow-sm placeholder:text-stone-400"
-  />
+  <div class="flex overflow-hidden rounded-2xl border-2 border-ink bg-cream shadow-hard">
+    <input
+      id={id}
+      name="q"
+      type="search"
+      autocomplete="off"
+      placeholder="Search products, categories, or what they replace…"
+      class="w-full bg-transparent px-5 py-4 text-base outline-none placeholder:text-ink-faint"
+    />
+    <button
+      type="submit"
+      class="shrink-0 border-l-2 border-ink bg-coral px-7 text-base font-extrabold hover:bg-coral-deep hover:text-cream"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      Search
+    </button>
+  </div>
   <p id={`${id}-status`} class="sr-only" role="status" aria-live="polite"></p>
-  <ul id={`${id}-results`} class="mt-2 divide-y divide-stone-100 rounded-lg border border-stone-200 bg-white shadow-sm hidden"></ul>
+  <ul id={`${id}-results`} class="mt-3 hidden divide-y-2 divide-paper overflow-hidden rounded-2xl border-2 border-ink bg-cream shadow-hard"></ul>
 </form>
 
 <script define:vars={{ id }}>
+  const form = document.getElementById(`${id}-form`);
   const input = document.getElementById(id);
   const results = document.getElementById(`${id}-results`);
   const status = document.getElementById(`${id}-status`);
@@ -43,6 +54,8 @@ const { id = "site-search" } = Astro.props;
       .every((term) => hay.includes(term));
   }
 
+  form.addEventListener("submit", (e) => e.preventDefault());
+
   let timer;
   input.addEventListener("input", () => {
     clearTimeout(timer);
@@ -60,7 +73,7 @@ const { id = "site-search" } = Astro.props;
       results.innerHTML = hits
         .map(
           (h) =>
-            `<li><a href="/listings/${h.slug}/" class="block px-4 py-3 hover:bg-stone-50"><span class="font-medium">${h.title}</span> <span class="text-sm text-stone-500">— ${h.tagline}</span></a></li>`
+            `<li><a href="/listings/${h.slug}/" class="block px-5 py-3.5 hover:bg-paper"><span class="font-extrabold">${h.title}</span>${h.sponsored ? ' <span class="text-xs font-bold uppercase">· Sponsored</span>' : ""}<span class="block text-sm text-ink-soft">${h.tagline}</span></a></li>`
         )
         .join("");
       results.classList.toggle("hidden", hits.length === 0);

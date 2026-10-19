@@ -3,10 +3,24 @@
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
     "Helvetica Neue", Arial, sans-serif;
+
+  --color-paper: #fdf6ec;
+  --color-cream: #fffdf9;
   --color-ink: #1c1917;
-  --color-paper: #fafaf9;
-  --color-accent: #4338ca;
-  --color-accent-dark: #3730a3;
+  --color-ink-soft: #57534e;
+  --color-ink-faint: #78716c;
+
+  --color-coral: #ff6b5b;
+  --color-coral-deep: #d9483b;
+  --color-sky: #38bdf8;
+  --color-lime: #a3e635;
+  --color-violet: #a78bfa;
+  --color-amber: #fbbf24;
+  --color-pink: #f472b6;
+
+  --shadow-hard-sm: 3px 3px 0 0 #1c1917;
+  --shadow-hard: 5px 5px 0 0 #1c1917;
+  --shadow-hard-lg: 7px 7px 0 0 #1c1917;
 }
 
 html {
@@ -26,11 +40,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+::selection {
+  background: var(--color-amber);
+  color: var(--color-ink);
+}
+
 /* Visible focus for keyboard users */
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-ink);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .skip-link {
@@ -40,10 +59,42 @@ body {
   z-index: 50;
   background: var(--color-ink);
   color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 0 0 0.375rem 0;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 0.75rem 0;
 }
 
 .skip-link:focus {
   left: 0;
+}
+
+/* Hand-drawn headline highlights */
+.hl-coral {
+  background: linear-gradient(transparent 60%, var(--color-coral) 60%, var(--color-coral) 95%, transparent 95%);
+  padding: 0 0.08em;
+}
+.hl-sky {
+  background: linear-gradient(transparent 60%, var(--color-sky) 60%, var(--color-sky) 95%, transparent 95%);
+  padding: 0 0.08em;
+}
+.hl-lime {
+  background: linear-gradient(transparent 60%, var(--color-lime) 60%, var(--color-lime) 95%, transparent 95%);
+  padding: 0 0.08em;
+}
+
+/* Sponsored ticker */
+.ticker-track {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-scroll 28s linear infinite;
+}
+@keyframes ticker-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
 }

@@ -33,6 +33,12 @@ Requires Node >= 22.12.
 Jurisdiction fields are first-class: `company.domicile` (ISO-3166 alpha-2),
 `dataResidency[]`, `license`, `selfHost`, `managed`, `replaces[]`.
 
+Sponsored listings: set `sponsored: true` in frontmatter. They render with an
+amber "Sponsored" sticker, a disclosure, `rel="sponsored"` on outbound links,
+and appear in the homepage spotlight, category banners, sponsor strip, and
+listing-page sidebar slots. See `src/pages/advertise.astro` for the media kit
+(draft launch pricing — confirm before publishing).
+
 ## AI-friendly by design
 
 - Semantic HTML, skip link, labeled landmarks, focus-visible styles

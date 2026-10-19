@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sovereign Stack mark">
-  <rect width="64" height="64" rx="14" fill="#1c1917"/>
-  <path d="M14 40c8-2 12-8 14-16 1.5-6 4-9 8-10" fill="none" stroke="#fafaf9" stroke-width="4" stroke-linecap="round"/>
-  <path d="M14 48c10-2 18-6 24-14 4-5.5 8-8 12-9" fill="none" stroke="#4338ca" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="46" cy="18" r="4" fill="#fafaf9"/>
+  <circle cx="32" cy="32" r="29" fill="#fffdf9" stroke="#1c1917" stroke-width="3.5"/>
+  <circle cx="25" cy="27" r="11" fill="#ff6b5b" opacity="0.85"/>
+  <circle cx="39" cy="27" r="11" fill="#38bdf8" opacity="0.85"/>
+  <circle cx="32" cy="39" r="11" fill="#a3e635" opacity="0.85"/>
 </svg>

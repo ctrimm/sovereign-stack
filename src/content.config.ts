@@ -37,6 +37,10 @@ const listings = defineCollection({
     // One-line GDPR / legal posture, e.g. "GDPR-native, EU-owned".
     gdpr: z.string(),
     featured: z.boolean().default(false),
+    // Paid placement. Sponsored listings render with a labeled "Sponsored"
+    // sticker, a disclosure, and rel="sponsored" on outbound links.
+    // Rankings are editorial; sponsorship buys visibility only.
+    sponsored: z.boolean().default(false),
     // Editorial maturity signal.
     maturity: z.enum(["Beta", "Production", "Established"]).default("Production"),
   }),

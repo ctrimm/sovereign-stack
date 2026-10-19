@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
+import ListingCard from "../../components/ListingCard.astro";
 import { countryName } from "../../lib/format";
 
 export async function getStaticPaths() {
@@ -9,11 +10,21 @@ export async function getStaticPaths() {
   const catById = new Map(categories.map((c) => [c.id, c.data]));
   return listings.map((listing) => ({
     params: { slug: listing.id },
-    props: { listing, catById },
+    props: {
+      listing,
+      catById,
+      // Sidebar slot: other sponsored listings in the same category (Gold-tier placement).
+      sidebarSponsors: listings.filter(
+        (l) => l.id !== listing.id && l.data.sponsored && l.data.categories.some((id) => listing.data.categories.includes(id))
+      ).slice(0, 2),
+      related: listings.filter(
+        (l) => l.id !== listing.id && !l.data.sponsored && l.data.categories.some((id) => listing.data.categories.includes(id))
+      ).slice(0, 2),
+    },
   }));
 }
 
-const { listing, catById } = Astro.props;
+const { listing, catById, sidebarSponsors, related } = Astro.props;
 const d = listing.data;
 const { Content } = await render(listing);
 
@@ -31,59 +42,103 @@ const jsonLd = {
 ---
 
 <Base title={d.title} description={`${d.title}: ${d.tagline}`} jsonLd={jsonLd}>
-  <div class="mx-auto max-w-3xl px-4 py-12">
-    <nav aria-label="Breadcrumb" class="text-sm text-stone-500">
-      <a href="/categories/" class="hover:underline">Categories</a>
+  <div class="mx-auto max-w-5xl px-4 pb-8 pt-14">
+    <nav aria-label="Breadcrumb" class="text-sm font-semibold text-ink-faint">
+      <a href="/categories/" class="hover:text-ink hover:underline">Categories</a>
       <span aria-hidden="true"> / </span>
-      <a href={`/categories/${d.categories[0]}/`} class="hover:underline">
+      <a href={`/categories/${d.categories[0]}/`} class="hover:text-ink hover:underline">
         {catById.get(d.categories[0])?.title ?? d.categories[0]}
       </a>
       <span aria-hidden="true"> / </span>
-      <span aria-current="page">{d.title}</span>
+      <span aria-current="page" class="text-ink">{d.title}</span>
     </nav>
 
-    <h1 class="mt-2 text-4xl font-semibold tracking-tight">{d.title}</h1>
-    <p class="mt-3 text-lg text-stone-600">{d.tagline}</p>
+    <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_320px]">
+      <div>
+        <h1 class="text-5xl font-black tracking-tight">{d.title}</h1>
+        <p class="mt-3 text-lg text-ink-soft">{d.tagline}</p>
 
-    <dl class="mt-8 grid grid-cols-1 gap-4 rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:grid-cols-2">
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Company</dt>
-        <dd class="mt-1 font-medium">{d.company.name} ({countryName(d.company.domicile)}{d.company.founded ? `, founded ${d.company.founded}` : ""})</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Website</dt>
-        <dd class="mt-1"><a href={d.website} rel="noopener" class="font-medium text-indigo-700 underline hover:text-indigo-900">{new URL(d.website).hostname}</a></dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">License</dt>
-        <dd class="mt-1">{d.license}{d.openSource ? " — open source" : ""}</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Pricing</dt>
-        <dd class="mt-1">{d.pricing}</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Data residency</dt>
-        <dd class="mt-1">{d.dataResidency.length > 0 ? d.dataResidency.map(countryName).join(", ") : "Your own infrastructure (self-hosted)"}</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Deployment</dt>
-        <dd class="mt-1">{[d.selfHost ? "Self-hostable" : null, d.managed ? "Managed hosting" : null].filter(Boolean).join(" · ")}</dd>
-      </div>
-      <div class="sm:col-span-2">
-        <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Legal posture</dt>
-        <dd class="mt-1">{d.gdpr}</dd>
-      </div>
-      {d.replaces.length > 0 && (
-        <div class="sm:col-span-2">
-          <dt class="text-xs font-medium uppercase tracking-wide text-stone-500">Replaces</dt>
-          <dd class="mt-1">{d.replaces.join(", ")}</dd>
+        {d.sponsored && (
+          <p class="mt-5 inline-block rotate-[-1deg] rounded-full border-2 border-ink bg-amber px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm">
+            Sponsored listing
+          </p>
+        )}
+
+        <dl class="mt-8 grid grid-cols-1 gap-5 rounded-[20px] border-2 border-ink bg-cream p-7 shadow-hard sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Company</dt>
+            <dd class="mt-1 font-bold">{d.company.name} ({countryName(d.company.domicile)}{d.company.founded ? `, founded ${d.company.founded}` : ""})</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Website</dt>
+            <dd class="mt-1"><a href={d.website} rel={d.sponsored ? "sponsored noopener" : "noopener"} class="font-bold text-coral-deep underline decoration-2 hover:text-ink">{new URL(d.website).hostname} →</a></dd>
+          </div>
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">License</dt>
+            <dd class="mt-1 font-medium">{d.license}{d.openSource ? " — open source" : ""}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Pricing</dt>
+            <dd class="mt-1 font-medium">{d.pricing}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Data residency</dt>
+            <dd class="mt-1 font-medium">{d.dataResidency.length > 0 ? d.dataResidency.map(countryName).join(", ") : "Your own infrastructure (self-hosted)"}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Deployment</dt>
+            <dd class="mt-1 font-medium">{[d.selfHost ? "Self-hostable" : null, d.managed ? "Managed hosting" : null].filter(Boolean).join(" · ")}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Legal posture</dt>
+            <dd class="mt-1 font-medium">{d.gdpr}</dd>
+          </div>
+          {d.replaces.length > 0 && (
+            <div class="sm:col-span-2">
+              <dt class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Replaces</dt>
+              <dd class="mt-1 font-medium">{d.replaces.join(", ")}</dd>
+            </div>
+          )}
+        </dl>
+
+        {d.sponsored && (
+          <p class="mt-5 rounded-2xl border-2 border-dashed border-ink-faint bg-paper p-4 text-sm text-ink-soft">
+            <strong class="text-ink">Disclosure:</strong> {d.company.name} sponsors this listing.
+            Sponsorship buys visibility — never ranking. <a href="/about/" class="font-bold underline">How we keep the line →</a>
+          </p>
+        )}
+
+        <div class="prose mt-8 max-w-none leading-relaxed text-ink-soft">
+          <Content />
         </div>
-      )}
-    </dl>
+      </div>
 
-    <div class="prose mt-8 max-w-none text-stone-700">
-      <Content />
+      <aside aria-label="More to explore" class="space-y-5 lg:pt-2">
+        {sidebarSponsors.length > 0 && (
+          <div class="rounded-[20px] border-2 border-ink bg-amber/20 p-5 shadow-hard">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-ink">Sponsored</p>
+            <div class="mt-4 space-y-4">
+              {sidebarSponsors.map((l) => (
+                <div class="rounded-2xl border-2 border-ink bg-cream p-4">
+                  <p class="font-extrabold"><a href={`/listings/${l.id}/`} class="hover:underline">{l.data.title}</a></p>
+                  <p class="mt-1 text-[13px] text-ink-soft">{l.data.tagline}</p>
+                </div>
+              ))}
+            </div>
+            <p class="mt-4 text-xs text-ink-soft"><a href="/advertise/" class="font-bold underline">Your product here →</a></p>
+          </div>
+        )}
+        {related.length > 0 && (
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider text-ink-faint">Related</p>
+            <div class="mt-3 space-y-4">
+              {related.map((l) => (
+                <ListingCard listing={l} />
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
     </div>
   </div>
 </Base>

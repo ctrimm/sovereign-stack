@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  sponsors: CollectionEntry<"listings">[];
+}
+
+const { sponsors } = Astro.props;
+if (sponsors.length === 0) return null;
+---
+
+<section aria-label="Sponsors" class="mt-16">
+  <p class="text-center text-xs font-extrabold uppercase tracking-[0.18em] text-ink-faint">
+    Powering the stack
+  </p>
+  <ul class="mt-5 flex flex-wrap items-center justify-center gap-3">
+    {sponsors.map((s) => (
+      <li>
+        <a
+          href={s.data.website}
+          rel="sponsored noopener"
+          class="inline-block rounded-full border-2 border-ink bg-cream px-6 py-2.5 text-sm font-extrabold shadow-hard-sm transition-transform hover:-translate-y-0.5"
+        >
+          {s.data.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="mt-4 text-center text-xs text-ink-faint">
+    Paid placements. <a href="/advertise/" class="font-bold underline">Become a sponsor →</a>
+  </p>
+</section>

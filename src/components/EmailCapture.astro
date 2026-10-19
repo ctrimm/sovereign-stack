@@ -4,16 +4,16 @@
 const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT;
 ---
 
-<section aria-labelledby="newsletter-heading" class="rounded-2xl bg-stone-900 px-6 py-8 text-stone-100 sm:px-10">
-  <h2 id="newsletter-heading" class="text-xl font-semibold tracking-tight">
+<section aria-labelledby="newsletter-heading" class="rotate-[0.6deg] rounded-3xl border-2 border-ink bg-coral p-8 shadow-hard-lg sm:p-10">
+  <h2 id="newsletter-heading" class="text-2xl font-black tracking-tight">
     Get new sovereign listings in your inbox
   </h2>
-  <p class="mt-2 max-w-xl text-sm text-stone-300">
+  <p class="mt-2 max-w-xl font-medium text-ink">
     A short, occasional email when we add new categories and products. No
     newsletter yet — just a heads-up list for launch.
   </p>
   {endpoint ? (
-    <form action={endpoint} method="post" class="mt-4 flex max-w-md flex-col gap-2 sm:flex-row">
+    <form action={endpoint} method="post" class="mt-5 flex max-w-md flex-col gap-3 sm:flex-row">
       <label for="newsletter-email" class="sr-only">Email address</label>
       <input
         id="newsletter-email"
@@ -21,17 +21,17 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT;
         type="email"
         required
         placeholder="you@example.com"
-        class="w-full rounded-lg border border-stone-700 bg-stone-800 px-4 py-2.5 text-sm text-white placeholder:text-stone-400"
+        class="w-full rounded-full border-2 border-ink bg-cream px-5 py-3 text-sm font-medium outline-none placeholder:text-ink-faint"
       />
       <button
         type="submit"
-        class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+        class="shrink-0 rounded-full border-2 border-ink bg-ink px-7 py-3 text-sm font-extrabold text-cream hover:bg-black"
       >
         Notify me
       </button>
     </form>
   ) : (
-    <p class="mt-4 text-sm text-stone-400">
+    <p class="mt-5 inline-block rounded-full border-2 border-ink bg-cream px-5 py-2.5 text-sm font-bold">
       Signup opens soon — check back after launch.
     </p>
   )}

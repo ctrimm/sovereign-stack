@@ -34,19 +34,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://sovereignst
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
-    <header class="border-b border-stone-200">
-      <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <a href="/" class="flex items-center gap-2 font-semibold tracking-tight" aria-label="Sovereign Stack home">
-          <img src="/favicon.svg" alt="" width="28" height="28" aria-hidden="true" />
-          <span>Sovereign Stack</span>
-        </a>
-        <nav aria-label="Primary">
-          <ul class="flex items-center gap-5 text-sm">
-            <li><a href="/categories/" class="text-stone-600 hover:text-stone-950 hover:underline">Categories</a></li>
-            <li><a href="/about/" class="text-stone-600 hover:text-stone-950 hover:underline">About</a></li>
-            <li><a href="/llms.txt" class="text-stone-600 hover:text-stone-950 hover:underline">llms.txt</a></li>
-          </ul>
-        </nav>
+    <header class="sticky top-3 z-20">
+      <div class="mx-auto max-w-5xl px-4">
+        <div class="flex items-center justify-between gap-2 rounded-full border-2 border-ink bg-cream py-2 pl-4 pr-2 shadow-hard-sm">
+          <a href="/" class="flex items-center gap-2 text-lg font-black tracking-tight" aria-label="Sovereign Stack home">
+            <img src="/favicon.svg" alt="" width="30" height="30" aria-hidden="true" />
+            <span class="hidden sm:inline">Sovereign Stack</span>
+            <span class="sm:hidden">Sovereign</span>
+          </a>
+          <nav aria-label="Primary">
+            <ul class="flex items-center gap-1 text-sm font-semibold">
+              <li><a href="/categories/" class="rounded-full px-3 py-2 hover:bg-paper">Categories</a></li>
+              <li><a href="/about/" class="rounded-full px-3 py-2 hover:bg-paper">About</a></li>
+              <li><a href="/advertise/" class="rounded-full border-2 border-ink bg-lime px-4 py-1.5 hover:brightness-95">Advertise</a></li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
 
@@ -54,16 +57,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://sovereignst
       <slot />
     </main>
 
-    <footer class="mt-16 border-t border-stone-200">
-      <div class="mx-auto max-w-5xl px-4 py-8 text-sm text-stone-600">
-        <p class="font-medium text-stone-900">Sovereign Stack</p>
-        <p class="mt-1 max-w-2xl">
+    <footer class="mt-20 pb-12">
+      <div class="mx-auto max-w-5xl px-4 text-sm text-ink-soft">
+        <p class="text-base font-black text-ink">Sovereign Stack</p>
+        <p class="mt-2 max-w-2xl">
           A curated directory of sovereign technology: self-hostable software,
           independently-domiciled services, and open hardware — organized by
           jurisdiction, so you can choose whose laws govern your data.
         </p>
-        <p class="mt-4">
-          <a href="/about/" class="underline hover:text-stone-950">Methodology &amp; advertising policy</a>
+        <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-semibold">
+          <a href="/about/" class="underline hover:text-ink">Methodology &amp; advertising policy</a>
+          <a href="/advertise/" class="underline hover:text-ink">Advertise</a>
+          <a href="/llms.txt" class="underline hover:text-ink">llms.txt</a>
+          <a href="/api/listings.json" class="underline hover:text-ink">API</a>
         </p>
       </div>
     </footer>
