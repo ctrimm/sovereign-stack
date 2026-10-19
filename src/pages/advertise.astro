@@ -10,7 +10,7 @@ const exampleListing = listings.find((l) => l.id === "plausible") ?? listings[0]
 const tiers = [
   {
     name: "Silver",
-    price: "$149",
+    price: "$298",
     per: "/month",
     blurb: "Your ad rotates across every page of the directory.",
     features: [
@@ -22,7 +22,7 @@ const tiers = [
   },
   {
     name: "Gold",
-    price: "$299",
+    price: "$598",
     per: "/month",
     blurb: "Top visibility: homepage spotlight, category banners, sponsor strip.",
     features: [
@@ -35,7 +35,7 @@ const tiers = [
   },
   {
     name: "Platinum",
-    price: "$599",
+    price: "$1,198",
     per: "/month",
     blurb: "Maximum presence, shown twice as often as Gold.",
     features: [
@@ -47,6 +47,21 @@ const tiers = [
     featured: false,
   },
 ];
+
+// Commitment discounts: [months, discount]
+const commitments: Array<[string, number, number]> = [
+  ["Monthly", 1, 0],
+  ["Quarterly", 3, 0.05],
+  ["Semi-annual", 6, 0.15],
+  ["Annual", 12, 0.35],
+];
+const tierBase: Array<[string, number]> = [
+  ["Silver", 298],
+  ["Gold", 598],
+  ["Platinum", 1198],
+];
+const money = (n: number) =>
+  "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 ---
 
 <Base
@@ -116,7 +131,46 @@ const tiers = [
     </section>
 
     <section aria-labelledby="units-heading" class="pt-16">
-      <h2 id="units-heading" class="text-3xl font-black tracking-tight">What sponsors get</h2>
+      <h2 id="units-heading" class="text-3xl font-black tracking-tight">Commit longer, pay less</h2>
+      <p class="mt-2 max-w-2xl text-ink-soft">
+        Prepay and lock founding-sponsor pricing for the full term. Annual works
+        out close to standard directory rates — monthly is the premium for flexibility.
+      </p>
+      <div class="mt-6 overflow-x-auto rounded-[20px] border-2 border-ink bg-cream shadow-hard">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <caption class="sr-only">Sponsorship pricing by commitment length</caption>
+          <thead>
+            <tr class="border-b-2 border-ink text-xs uppercase tracking-wider text-ink-faint">
+              <th scope="col" class="px-5 py-4 font-extrabold">Tier</th>
+              {commitments.map(([label, , discount]) => (
+                <th scope="col" class="px-5 py-4 font-extrabold">
+                  {label}
+                  {discount > 0 && <span class="ml-1 rounded-full bg-lime px-2 py-0.5 text-[10px] text-ink">−{Math.round(discount * 100)}%</span>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody class="divide-y-2 divide-paper">
+            {tierBase.map(([tier, base]) => (
+              <tr>
+                <th scope="row" class="px-5 py-4 font-extrabold">{tier}</th>
+                {commitments.map(([, months, discount]) => (
+                  <td class="px-5 py-4">
+                    <span class="font-extrabold">{money(base * months * (1 - discount))}</span>
+                    <span class="block text-xs text-ink-faint">
+                      {months === 1 ? "per month" : `for ${months} months · ${money((base * (1 - discount)))} eff./mo`}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="units2-heading" class="pt-16">
+      <h2 id="units2-heading" class="text-3xl font-black tracking-tight">What sponsors get</h2>
       <p class="mt-2 max-w-2xl text-ink-soft">
         Every placement is labeled <strong class="text-ink">Sponsored</strong>. Rankings stay
         editorial — sponsorship buys visibility, never position.
