@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
+import FilterBar from "../../components/FilterBar.astro";
 import { countryName, residencyLabel } from "../../lib/format";
 
 export async function getStaticPaths() {
@@ -21,6 +22,7 @@ const c = category.data;
 const sponsors = items.filter((l) => l.data.sponsored);
 const editorial = items.filter((l) => !l.data.sponsored);
 const ordered = [...sponsors, ...editorial];
+const domiciles = [...new Set(ordered.map((l) => l.data.company.domicile))];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -71,6 +73,9 @@ const jsonLd = {
       </aside>
     )}
 
+    <FilterBar domiciles={domiciles} total={ordered.length} />
+
+    <div id="filterable">
     <h2 class="mt-12 text-2xl font-black tracking-tight">Compare</h2>
     <div class="mt-4 overflow-x-auto rounded-[20px] border-2 border-ink bg-cream shadow-hard">
       <table class="w-full min-w-[760px] text-left text-sm">
@@ -87,7 +92,15 @@ const jsonLd = {
         </thead>
         <tbody class="divide-y-2 divide-paper">
           {ordered.map((l) => (
-            <tr class:list={[l.data.sponsored && "bg-amber/15"]}>
+            <tr
+              data-id={l.id}
+              class:list={[l.data.sponsored && "bg-amber/15"]}
+              data-filter-item
+              data-domicile={l.data.company.domicile}
+              data-open={l.data.openSource ? "true" : "false"}
+              data-selfhost={l.data.selfHost ? "true" : "false"}
+              data-pricing={l.data.pricing}
+            >
               <th scope="row" class="px-5 py-4 font-extrabold">
                 <a href={`/listings/${l.id}/`} class="text-coral-deep underline decoration-2 hover:text-ink">{l.data.title}</a>
                 {l.data.sponsored && (
@@ -111,8 +124,20 @@ const jsonLd = {
     <h2 class="mt-12 text-2xl font-black tracking-tight">All {c.title} listings</h2>
     <div class="mt-6 grid gap-5 sm:grid-cols-2">
       {ordered.map((l) => (
-        <ListingCard listing={l} />
+        <div data-id={l.id}
+          data-filter-item
+          data-domicile={l.data.company.domicile}
+          data-open={l.data.openSource ? "true" : "false"}
+          data-selfhost={l.data.selfHost ? "true" : "false"}
+          data-pricing={l.data.pricing}
+        >
+          <ListingCard listing={l} />
+        </div>
       ))}
+    </div>
+    <p data-filter-empty hidden class="mt-8 rounded-[20px] border-2 border-dashed border-ink/40 p-6 text-center font-bold text-ink-soft">
+      No products match those filters. Try widening the jurisdiction or clearing a checkbox.
+    </p>
     </div>
   </div>
 </Base>

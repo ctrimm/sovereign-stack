@@ -1,0 +1,132 @@
+---
+import { countryName } from "../lib/format";
+
+interface Props {
+  /** Unique domicile codes present on this page. */
+  domiciles: string[];
+  /** Total items before filtering. */
+  total: number;
+}
+
+const { domiciles, total } = Astro.props;
+const sorted = [...domiciles].sort((a, b) => countryName(a).localeCompare(countryName(b)));
+---
+
+<form
+  id="filter-bar"
+  class="sticker mt-8 flex flex-wrap items-end gap-x-6 gap-y-4 p-5"
+  aria-label="Filter products"
+  onsubmit="return false;"
+>
+  <fieldset>
+    <legend class="sr-only">Filter products</legend>
+    <div class="flex flex-wrap items-end gap-x-6 gap-y-4">
+      <label class="block">
+        <span class="mb-1 block text-xs font-extrabold uppercase tracking-wider text-ink-faint">Domicile</span>
+        <select id="filter-domicile" class="field-sm">
+          <option value="">All jurisdictions</option>
+          {sorted.map((code) => (
+            <option value={code}>{countryName(code)}</option>
+          ))}
+        </select>
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-xs font-extrabold uppercase tracking-wider text-ink-faint">Pricing</span>
+        <select id="filter-pricing" class="field-sm">
+          <option value="">Any pricing</option>
+          <option>Free</option>
+          <option>Freemium</option>
+          <option>Paid</option>
+          <option>Usage-based</option>
+        </select>
+      </label>
+      <label class="inline-flex cursor-pointer items-center gap-2 pb-2 text-sm font-bold">
+        <input id="filter-open" type="checkbox" class="h-5 w-5 accent-ink" />
+        Open source only
+      </label>
+      <label class="inline-flex cursor-pointer items-center gap-2 pb-2 text-sm font-bold">
+        <input id="filter-selfhost" type="checkbox" class="h-5 w-5 accent-ink" />
+        Self-hostable only
+      </label>
+      <button
+        type="button"
+        id="filter-reset"
+        class="mb-1 rounded-full border-2 border-ink bg-paper px-4 py-1.5 text-sm font-bold hover:bg-cream"
+      >
+        Reset
+      </button>
+    </div>
+  </fieldset>
+  <p class="w-full text-sm font-bold text-ink-soft" aria-live="polite">
+    <span id="filter-count">{total}</span> of {total} products
+  </p>
+</form>
+
+<script is:inline>
+  (function () {
+    function init() {
+      var bar = document.getElementById("filter-bar");
+      var scope = document.getElementById("filterable");
+      if (!bar || !scope) return;
+      var domicile = document.getElementById("filter-domicile");
+      var pricing = document.getElementById("filter-pricing");
+      var open = document.getElementById("filter-open");
+      var selfhost = document.getElementById("filter-selfhost");
+      var count = document.getElementById("filter-count");
+      var reset = document.getElementById("filter-reset");
+      var empty = scope.querySelector("[data-filter-empty]");
+      var items = Array.prototype.slice.call(scope.querySelectorAll("[data-filter-item]"));
+
+      function apply() {
+        var seen = {};
+        var shown = 0;
+        items.forEach(function (el) {
+          var ok =
+            (!domicile.value || el.dataset.domicile === domicile.value) &&
+            (!pricing.value || el.dataset.pricing === pricing.value) &&
+            (!open.checked || el.dataset.open === "true") &&
+            (!selfhost.checked || el.dataset.selfhost === "true");
+          el.hidden = !ok;
+          // Each listing renders twice (table row + card); count it once.
+          if (ok && !seen[el.dataset.id]) {
+            seen[el.dataset.id] = true;
+            shown++;
+          }
+        });
+        count.textContent = String(shown);
+        if (empty) empty.hidden = shown > 0;
+      }
+
+      ["change", "input"].forEach(function (evt) {
+        bar.addEventListener(evt, apply);
+      });
+      reset.addEventListener("click", function () {
+        domicile.value = "";
+        pricing.value = "";
+        open.checked = false;
+        selfhost.checked = false;
+        apply();
+      });
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  .field-sm {
+    border: 2px solid var(--color-ink);
+    border-radius: 12px;
+    background: var(--color-paper);
+    padding: 0.45rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .field-sm:focus {
+    outline: 3px solid var(--color-lime);
+    outline-offset: 1px;
+  }
+</style>

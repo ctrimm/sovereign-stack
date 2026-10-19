@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Batch E: sovereign clouds + /submit flow
+- **Decision:** +41 listings (327 total; 578 pages). Batch E focused on commercial cloud providers with sovereignty posture: SecNumCloud-qualified 3DS Outscale (FR), Open Telekom Cloud + STACKIT (DE), Aruba Cloud (IT), Safespring (SE, verified 100% Swedish), Nubo (BE cooperative, verified), Aiven (FI), Hostinger + Cherry Servers (LT), CloudFerro/Oktawave (PL), Elastx/Cleura/Binero/Glesys (SE), Fuga/Leafcloud/Greenhost/TransIP (NL, Leafcloud verified), CloudSigma/Hostpoint/KeyCDN (CH), Naver Cloud (KR, verified), Sakura (JP), Sify (IN), Alibaba Cloud (CN), Core42 (AE/G42, verified). New **/submit** page: backend-free listing submission — form builds a pre-filled GitHub issue (labeled `new-listing`) + copy-as-markdown fallback; required-field validation; linked from nav, footer, and a homepage CTA band. Editorial review note: inclusion free, never for sale.
+- **Evidence:** Cory: "keep adding more - look at commercial cloud service providers... Also, please add a way for people to submit net-new items."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Batch D: researched AI sovereign listings
 - **Decision:** +71 listings (286 total; 519 pages: 163 alternatives, 36 jurisdictions). Researched via Firecrawl (awesome-european-ai list, Reuters, Wikipedia): EU AI labs (Poolside, Black Forest Labs, Domyn, H, Kyutai, Almawave, Tilde, NXAI, Noxtua, Legora, Photoroom), EU AI clouds (Nscale, Nebius, Northern Data, Berget AI, Regolo, Verda, VSHN), EU AI chips (SiPearl, Axelera AI, Innatera, SEMRON, SpiNNcloud, Fractile, VSORA, Kalray, GreenWaves), open-source AI tooling (Qdrant DE, Weaviate NL BSD-3 verified, Jina AI, Mixedbread, deepset, Rasa, Langfuse, Giskard, LangWatch, ZenML, Flower, Meilisearch, Argilla, Docling), plus KR chips (FuriosaAI, Rebellions), IL (Hailo, D-ID), CN models (DeepSeek, Qwen), IN (Khoj). **Correction:** Aleph Alpha listing updated — signed definitive merger agreement with Cohere Sept 2026 (Reuters), combined co. operates as Cohere, dual HQ Toronto/Berlin; added Cohere listing (CA).
 - **Evidence:** Cory: "keep going and use firecrawl if need be or your internal browser to find more AI sovereign offerings."

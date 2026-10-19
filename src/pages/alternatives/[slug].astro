@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ListingCard from "../../components/ListingCard.astro";
+import FilterBar from "../../components/FilterBar.astro";
 import Ticker from "../../components/Ticker.astro";
 import { slugify, countryName, EU_COUNTRIES, residencyLabel } from "../../lib/format";
 
@@ -22,6 +23,7 @@ export async function getStaticPaths() {
 }
 
 const { name, items } = Astro.props;
+const domiciles = [...new Set(items.map((l) => l.data.company.domicile))];
 const pageTitle = `Sovereign alternatives to ${name}`;
 const pageDesc = `Compare ${items.length} sovereign ${items.length === 1 ? "product" : "products"} that replace ${name}: company domicile, data residency, license, and pricing.`;
 
@@ -100,6 +102,9 @@ const faqJsonLd = {
       </p>
     </header>
 
+    <FilterBar domiciles={domiciles} total={items.length} />
+
+    <div id="filterable">
     <section aria-label={`Comparison of ${name} alternatives`} class="mt-10 overflow-x-auto rounded-[20px] border-2 border-ink bg-cream shadow-hard">
       <table class="w-full min-w-[760px] text-left text-sm">
         <caption class="sr-only">{pageTitle} comparison</caption>
@@ -115,7 +120,15 @@ const faqJsonLd = {
         </thead>
         <tbody class="divide-y-2 divide-paper">
           {items.map((l) => (
-            <tr class={l.data.sponsored ? "bg-amber/15" : undefined}>
+            <tr
+              data-id={l.id}
+              class={l.data.sponsored ? "bg-amber/15" : undefined}
+              data-filter-item
+              data-domicile={l.data.company.domicile}
+              data-open={l.data.openSource ? "true" : "false"}
+              data-selfhost={l.data.selfHost ? "true" : "false"}
+              data-pricing={l.data.pricing}
+            >
               <th scope="row" class="px-5 py-4 font-extrabold">
                 <a href={`/listings/${l.id}/`} class="underline decoration-wavy decoration-2 underline-offset-4 hover:text-ink-soft">
                   {l.data.title}
@@ -134,8 +147,22 @@ const faqJsonLd = {
     </section>
 
     <section aria-label="All alternatives" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((l) => <ListingCard listing={l} />)}
+      {items.map((l) => (
+        <div data-id={l.id}
+          data-filter-item
+          data-domicile={l.data.company.domicile}
+          data-open={l.data.openSource ? "true" : "false"}
+          data-selfhost={l.data.selfHost ? "true" : "false"}
+          data-pricing={l.data.pricing}
+        >
+          <ListingCard listing={l} />
+        </div>
+      ))}
     </section>
+    <p data-filter-empty hidden class="mt-10 rounded-[20px] border-2 border-dashed border-ink/40 p-6 text-center font-bold text-ink-soft">
+      No alternatives match those filters. Try widening the jurisdiction or clearing a checkbox.
+    </p>
+    </div>
 
     <section aria-labelledby="faq-heading" class="mt-14 max-w-3xl">
       <h2 id="faq-heading" class="text-2xl font-black tracking-tight">Frequently asked questions</h2>
