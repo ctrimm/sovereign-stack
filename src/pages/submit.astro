@@ -158,17 +158,19 @@ const countries: [string, string][] = [
 
       <div class="flex flex-wrap gap-4">
         <button type="submit" class="rounded-full border-2 border-ink bg-lime px-8 py-3 text-base font-black shadow-hard transition-transform hover:-translate-y-0.5">
-          Open pre-filled GitHub issue →
+          Send via email →
         </button>
         <button type="button" id="copy-btn" class="rounded-full border-2 border-ink bg-cream px-8 py-3 text-base font-black shadow-hard transition-transform hover:-translate-y-0.5">
           Copy as markdown
         </button>
+        <button type="button" id="github-btn" class="rounded-full border-2 border-ink bg-cream px-8 py-3 text-base font-black shadow-hard transition-transform hover:-translate-y-0.5">
+          GitHub issue
+        </button>
       </div>
       <p class="text-sm text-ink-soft">
-        Submitting opens a pre-filled issue on our public GitHub repo — no account
-        needed to draft it, though you'll sign in to post. Prefer email? Use
-        "Copy as markdown" and send it wherever suits you. We review every
-        submission; typical turnaround is a few days.
+        Submitting opens your email app with everything pre-filled, addressed to
+        our editorial inbox. We review every submission; typical turnaround is a
+        few days. Prefer GitHub? The issue option posts to our public repo instead.
       </p>
     </form>
   </div>
@@ -234,7 +236,16 @@ const countries: [string, string][] = [
         showError("Please fill in the required fields: product name, website, tagline, company name, and domicile.");
         return;
       }
-      const title = "New listing: " + val("productName");
+      const subject = "[New listing] " + val("productName");
+      const body = buildMarkdown();
+      window.location.href =
+        "mailto:admin@sovereignstack.co" +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+    });
+
+    document.getElementById("github-btn").addEventListener("click", function () {
+      const title = "New listing: " + (val("productName") || "Untitled");
       const body = buildMarkdown();
       const url =
         "https://github.com/ctrimm/sovereign-stack/issues/new" +
@@ -250,7 +261,7 @@ const countries: [string, string][] = [
         copyBtn.textContent = "Copied!";
         setTimeout(() => { copyBtn.textContent = "Copy as markdown"; }, 2000);
       } catch (err) {
-        showError("Copy failed — your browser blocked clipboard access. The pre-filled issue option still works.");
+        showError("Copy failed — your browser blocked clipboard access. The email and GitHub options still work.");
       }
     });
   })();

@@ -25,6 +25,11 @@
 - **Evidence:** Trust is the product for a directory; undisclosed paid ranking destroys it.
 - **Date:** 2026-10-19
 
+## 2026-10-19 — Sponsored media kit (gallery + video)
+- **Decision:** Built the sponsored media kit Cory asked for: `MediaGallery.astro` (main stage + right-hand thumbnail rail, prev/next arrows, keyboard nav, aria carousel semantics, lazy click-to-play video) rendered on sponsored listing pages via new frontmatter (`gallery[]`, `videoUrl`, `videoTitle`). Video allowlist: YouTube (incl. youtu.be/shorts/embed) + Vimeo, converted to privacy embeds; non-matching URLs fail closed. Tier mapping: Silver up to 3 images / Gold up to 6 / Platinum up to 8 + video embed as hero. Marketed on /advertise: media-kit bullets on all tier cards + dedicated "The sponsored media kit" section with live labeled demo gallery (3 generated example images in public/sponsors/example/) + specs/ground-rules box. Verified live via temp-sponsored Plausible listing (video hero slide, thumbnail rail, arrow nav, active-thumb highlight), reverted before push — no real sponsors exist.
+- **Evidence:** Cory: "I think if you do a certain tier you should maybe be able to embed a video as well... what are your thoughts on that for a differentiator" → agreed to build; "be sure to call it out in all the advertising text, marketing language."
+- **Date:** 2026-10-19
+
 ## 2026-10-19 — Two essays + artwork for all Insights
 - **Decision:** Added the two queued essays: "Europe's AI sovereignty playbook" (chips→clouds→models→apps, incl. Aleph Alpha/Cohere cautionary tale) and "Your phone is the weakest layer" (mobile sovereignty stack: /e/OS, CalyxOS, Sailfish, 4 hardware theories). Generated 9 sticker-book-style hero images (one per essay, 16:9, no text) via media pipeline; reviewed firsthand before shipping. Wired into Insights: `image` frontmatter field, hero figure on essay pages, thumbnails on index cards, og:image + twitter:image (summary_large_image) via new Base `image` prop.
 - **Evidence:** Cory: "let's add those two essays. also, we need images for each, so, make those and include them."
